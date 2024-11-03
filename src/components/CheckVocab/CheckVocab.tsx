@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CardStructure from "../CardComponents/CardStructure";
 import CardTitle from "../CardComponents/CardTitle";
 import Button from "../FormComponents/Button";
@@ -13,22 +13,23 @@ interface WordMeaningType {
 const CheckVocab = () => {
     const [wordMeaning, setWordMeaning] = useState<WordMeaningType>({ word: "", meaning: "" });
 
-    useEffect(() => {
-        const form = document.querySelector("#check_vocab_form") as HTMLFormElement;
-        form.addEventListener("submit", (event) => {
-            event.preventDefault();
-            const data = new FormData(form);
+    const checkVocabHandler = (e: React.FormEvent) => {
+        e.preventDefault();
+        const data = new FormData(e.target as HTMLFormElement);
 
-            // set the fetched vocab into state
-            setWordMeaning({ word: data.get("check_word") as string, meaning: "মোছাঃ ফারহানা হোমায়ারা" });
+        // set the fetched vocab into state
+        setWordMeaning({
+            word: data.get("check_word") as string,
+            meaning: data.get("check_word") as string
         });
-    }, []);
+    }
+
 
     return (
         <CardStructure>
             <CardTitle title="Check Meaning" />
             <form
-                id="check_vocab_form"
+                onSubmit={checkVocabHandler}
                 className="flex flex-col lg:flex-row justify-center items-center lg:items-end gap-5"
             >
                 <InputField id="check_word" name="check_word" label="Word" placeholder="type word" lang="en" />
