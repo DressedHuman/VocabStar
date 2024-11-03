@@ -3,8 +3,13 @@ import CardStructure from "../CardComponents/CardStructure";
 import Button from "../FormComponents/Button";
 import InputField from "../FormComponents/InputField";
 import CardTitle from "../CardComponents/CardTitle";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../app/store";
+import { register } from "../../features/auth/authActions";
+import FormError from "../FormComponents/FormError";
 
-interface RegistrationDataType {
+export interface RegistrationDataType {
     first_name: string;
     last_name: string;
     email: string;
@@ -13,6 +18,11 @@ interface RegistrationDataType {
 
 const Register: React.FC = () => {
     const nav = useNavigate();
+    const dispatch = useDispatch();
+
+    // states
+    const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+    const registerError = useSelector((state: RootState) => state.auth.error);
 
     // register handler
     const registerHandler = (e: React.FormEvent) => {
@@ -25,9 +35,14 @@ const Register: React.FC = () => {
             "email": form.get("email") as string,
             "password": form.get("password") as string,
         };
-
-        console.log(data);
+        register(data, nav, dispatch);
     }
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            nav("/");
+        }
+    })
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-5 gap-7">
@@ -41,7 +56,7 @@ const Register: React.FC = () => {
                     className="flex flex-col justify-center items-center gap-4"
                 >
                     {/* First Name Field */}
-                    <InputField id="first_name" name="first_name" label="Your First Name" placeholder="type first name" />
+                    <InputField id="first_name" name="first_name" label="Your First Name" placeholder="type first name" focus />
 
                     {/* Last Name Field */}
                     <InputField id="last_name" name="last_name" label="Your Last Name" placeholder="type last name" />
@@ -51,6 +66,9 @@ const Register: React.FC = () => {
 
                     {/* Password Field */}
                     <InputField type="password" id="password" name="password" label="Password" placeholder="type password" required />
+
+                    {/* Submission Error */}
+                    {registerError && <FormError errorText={registerError} />}
 
                     {/* Login Button */}
                     <Button label="Register" button_type="submit" />

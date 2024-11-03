@@ -31,8 +31,6 @@ const Login: React.FC = () => {
             password: form.get("password") as string,
         };
         login(credentials, dispatch);
-
-        console.log(credentials);
     }
 
     useEffect(() => {
@@ -53,7 +51,7 @@ const Login: React.FC = () => {
                     className="flex flex-col justify-between items-center gap-4"
                 >
                     {/* Email Field */}
-                    <InputField type="email" id="email" name="email" label="Your Email" lang="en" placeholder="type email" required />
+                    <InputField type="email" id="email" name="email" label="Your Email" lang="en" placeholder="type email" required focus />
 
                     {/* Password Field */}
                     <InputField type="password" id="password" name="password" label="Password" placeholder="type password" required />

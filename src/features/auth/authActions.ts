@@ -1,9 +1,29 @@
 import { AxiosError } from "axios";
 import axiosInstance from "../../api/apiInstance";
 import { AppDispatch } from "../../app/store";
-import { loginFailure, loginStart, loginSuccess, logout, tokenFailure } from "./authSllice"
+import { loginFailure, loginStart, loginSuccess, logout, registerFailure, registerStart, registerSuccess, tokenFailure } from "./authSllice"
 import { CredentialsType } from "../../components/Login/Login";
+import { RegistrationDataType } from "../../components/Register/Register";
+import { NavigateFunction } from "react-router-dom";
 
+
+// register function
+export const register = async (userDetails: RegistrationDataType, nav: NavigateFunction, dispatch: AppDispatch) => {
+    dispatch(registerStart());
+    try {
+        await axiosInstance.post("/apis/user/register/", userDetails);
+        dispatch(registerSuccess());
+        nav("/login");
+    }
+    catch (error) {
+        let errorMessage = "an error occurred while registering";
+        if (error instanceof AxiosError) {
+            errorMessage = error.response?.data?.detail || errorMessage;
+        }
+
+        dispatch(registerFailure(errorMessage));
+    }
+}
 
 
 // login function
