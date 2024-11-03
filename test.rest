@@ -1,0 +1,24 @@
+POST http://localhost:8000/apis/user/register/
+Content-Type: application/json
+
+{"email": "farhana@mizan.com", "first_name": "Farhana", "last_name": "Homayra", "password": "ILoveYouFarhana"}
+###
+
+
+POST http://localhost:8000/apis/user/login/
+Content-Type: application/json
+
+{"email": "farhana@mizan.com", "password": "ILoveYouFarhana"}
+###
+
+
+GET http://localhost:8000/apis/user/test_token/
+Authorization: Token c6b596ab6aa0192b86688b0e121a8dfeb26cd5e0
+
+###
+
+
+POST http://localhost:8000/apis/user/logout/
+Authorization: Token c6b596ab6aa0192b86688b0e121a8dfeb26cd5e0
+
+###

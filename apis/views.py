@@ -12,14 +12,20 @@ from user.serializers import CustomUserSerializer
 @api_view(["POST"])
 @permission_classes([AllowAny])
 def register(req):
-    serializer = CustomUserSerializer(data=req.data)
-    if serializer.is_valid():
-        serializer.save()
+    # first check if email is already used or not
+    try:
         user = CustomUser.objects.get(email=req.data["email"])
-        user.set_password(req.data["password"])
-        user.save()
-        return Response({"detail": "User Registration Successful"}, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # email is already used, so sending error message
+        return Response({"detail": "email is already used"}, status=status.HTTP_400_BAD_REQUEST)
+    except:
+        serializer = CustomUserSerializer(data=req.data)
+        if serializer.is_valid():
+            serializer.save()
+            user = CustomUser.objects.get(email=req.data["email"])
+            user.set_password(req.data["password"])
+            user.save()
+            return Response({"detail": "User Registration Successful"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
 
 # login view
 @api_view(['POST'])
@@ -43,3 +49,17 @@ def login(req):
 @api_view(["GET"])
 def test_token(req):
     return Response({"detail": "passed"}, status=status.HTTP_200_OK)
+
+# logout view
+@api_view(["POST"])
+def logout(req):
+    req.user.auth_token.delete()
+    return Response({"detail": "successfully logged out"}, status=status.HTTP_200_OK)
+
+
+# get user info with token
+@api_view(["GET"])
+def get_user_info(req):
+    user = req.user
+    serializer = CustomUserSerializer(instance=user)
+    return Response({"user": serializer.data}, status=status.HTTP_200_OK)
