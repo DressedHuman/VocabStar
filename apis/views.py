@@ -6,8 +6,12 @@ from rest_framework.authtoken.models import Token
 
 from user.models import CustomUser
 from user.serializers import CustomUserSerializer
+from vocab.models import Word, Meaning
+from vocab.serializers import MeaningSerializer, WordSerializer
 
-
+""" ------------------------------------------------------------------------------------
+                            Auth Related Views
+---------------------------------------------------------------------------------------- """
 # register view
 @api_view(["POST"])
 @permission_classes([AllowAny])
@@ -63,3 +67,18 @@ def get_user_info(req):
     user = req.user
     serializer = CustomUserSerializer(instance=user)
     return Response({"user": serializer.data}, status=status.HTTP_200_OK)
+
+
+""" -----------------------------------------------------------------------------------------------
+                                   Vocab Related Views
+----------------------------------------------------------------------------------------------- """
+# add vocab view
+@api_view(["POST"])
+def add_vocab(req):
+    data = req.data.copy()
+    data["owner"] = req.user.id
+    serializer = WordSerializer(data=data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response({"detail": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
