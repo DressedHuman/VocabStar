@@ -32,6 +32,9 @@ const authSlice = createSlice({
     name: "user",
     initialState,
     reducers: {
+        /* -----------------------------------------------------------------------
+                               Auth Related reducers                              
+        -------------------------------------------------------------------------- */
         registerStart: (state) => {
             state.loading = true;
             state.error = null;
@@ -83,7 +86,7 @@ const authSlice = createSlice({
 
             // logging the error to the console
             console.error(action.payload);
-        }
+        },
     }
 });
 

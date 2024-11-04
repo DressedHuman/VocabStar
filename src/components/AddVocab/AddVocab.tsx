@@ -1,26 +1,54 @@
+import { useDispatch, useSelector } from "react-redux";
 import CardStructure from "../CardComponents/CardStructure";
 import CardTitle from "../CardComponents/CardTitle";
 import Button from "../FormComponents/Button";
 import InputField from "../FormComponents/InputField";
+import { RootState } from "../../app/store";
+import FormError from "../FormComponents/FormError";
+import { addVocab } from "../../features/vocab/vocabActions";
+import { useEffect } from "react";
 
-interface WordMeaningType {
+interface MeaningType {
+    "meaning": string;
+};
+
+
+export interface WordMeaningType {
     word: string | null;
-    meaning: string | null;
+    meanings: MeaningType[];
 };
 
 const AddVocab = () => {
-    const onSubmitHandler = (e: React.FormEvent) => {
+    const dispatch = useDispatch();
+    // states
+    const addVocabSuccess = useSelector((state: RootState) => state.vocab.successfull)
+    const addVocabError = useSelector((state: RootState) => state.vocab.error);
+
+    // add vocab handler
+    const addVocabHandler = (e: React.FormEvent) => {
         e.preventDefault();
         const form = new FormData(e.target as HTMLFormElement);
+        const word = form.get("from_word") as string;
+        const word_meanings = form.getAll("meaning[]") as string[];
 
-        const data: WordMeaningType = {
-            word: form.get("from_word") as string,
-            meaning: form.get("meaning") as string,
+        const word_meaning: WordMeaningType = {
+            word: word.toLowerCase(),
+            meanings: word_meanings.map((meaning) => {
+                return { "meaning": meaning };
+            }),
         };
-
-        console.log(data);
+        addVocab(word_meaning, dispatch);
     }
 
+    useEffect(() => {
+        if (addVocabSuccess) {
+            // resetting the form
+            const form = document.querySelector("#add_vocab_form") as HTMLFormElement;
+            form.reset();
+            const wordElem = form.querySelector("#from_word") as HTMLInputElement;
+            wordElem.focus();
+        }
+    })
 
     return (
         <CardStructure>
@@ -29,17 +57,23 @@ const AddVocab = () => {
 
             {/* Add Vocab Form */}
             <form
-                onSubmit={onSubmitHandler}
+                id="add_vocab_form"
+                onSubmit={addVocabHandler}
                 className="flex flex-col justify-center items-center gap-5"
             >
                 <div className="flex flex-col lg:flex-row justify-center items-center gap-2 md:gap-4">
                     {/* Original English Word Field */}
-                    <InputField label="Word" name="from_word" id="from_word" placeholder="type english word" required />
+                    <InputField label="Word" name="from_word" id="from_word" placeholder="type english word" required focus />
 
                     {/* Meaning Field */}
-                    <InputField label="Meaning" name="meaning" id="meaning" placeholder="বাংলায় অর্থ লিখুন" lang="bn" required />
+                    <InputField label="Meaning" name="meaning[]" placeholder="বাংলায় অর্থ লিখুন" lang="bn" required />
                 </div>
-                <Button label="Save" />
+
+                {/* Submission Error */}
+                {addVocabError && <FormError errorText={addVocabError} />}
+
+                {/* Submit Button */}
+                <Button label="Save" button_type="submit" />
             </form>
         </CardStructure>
     );

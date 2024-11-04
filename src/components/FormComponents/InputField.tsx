@@ -4,7 +4,7 @@ interface Props {
     type?: HTMLInputTypeAttribute;
     label: string;
     name: string;
-    id: string;
+    id?: string;
     placeholder: string;
     lang?: "en" | "bn";
     required?: boolean;

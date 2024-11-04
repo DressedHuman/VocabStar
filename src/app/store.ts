@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import AuthReducer from '../features/auth/authSllice';
+import VocabReducer from '../features/vocab/vocabSlice';
 
 const store = configureStore({
     reducer: {
         auth: AuthReducer,
+        vocab: VocabReducer,
     }
 });
 

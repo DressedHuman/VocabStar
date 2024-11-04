@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useEffect } from "react";
 import { get_user_info_with_token } from "../../features/auth/authActions";
+import { Slide, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Root = () => {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -20,18 +22,30 @@ const Root = () => {
             console.log(token);
             get_user_info_with_token(token, dispatch);
         }
-        else{
+        else {
             localStorage.removeItem("token");
         }
     }, []);
 
     return (
-        <div className="min-w-[100vw] min-h-[100vh] px-5 md:px-7 lg:px-12 py-2 md:py-3 space-y-12 flex flex-col justify-between items-center">
-            <Header />
-            <div className="w-full grow">
-                <Outlet />
+        <div>
+            <div className="w-[100vw] min-h-[100vh] px-5 md:px-7 lg:px-12 py-2 md:py-3 space-y-12 flex flex-col justify-between items-center">
+                <Header />
+                <div className="w-full grow">
+                    <Outlet />
+                </div>
+                <Footer />
             </div>
-            <Footer />
+
+            {/* react toasts container */}
+            <ToastContainer
+                position="top-right"
+                autoClose={3500}
+                newestOnTop={false}
+                transition={Slide}
+                pauseOnFocusLoss={false}
+                pauseOnHover
+            />
         </div>
     );
 };
