@@ -1,28 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CardStructure from "../CardComponents/CardStructure";
 import CardTitle from "../CardComponents/CardTitle";
 import Button from "../FormComponents/Button";
 import InputField from "../FormComponents/InputField";
 import WordMeaning from "./WordMeaning";
+import { useDispatch, useSelector } from "react-redux";
+import { checkVocab } from "../../features/vocab/vocabActions";
+import { RootState } from "../../app/store";
 
-interface WordMeaningType {
+
+interface CheckMeaningType {
+    id: number;
+    meaning: string;
+};
+
+export interface CheckWordMeaningType {
     word: string | null;
-    meaning: string | null;
+    meanings: CheckMeaningType[];
 };
 
 const CheckVocab = () => {
-    const [wordMeaning, setWordMeaning] = useState<WordMeaningType>({ word: "", meaning: "" });
+    const dispatch = useDispatch();
+    // states
+    const vocab_type = useSelector((state: RootState) => state.vocab.vocab_action);
+    const [wordMeaning, setWordMeaning] = useState<CheckWordMeaningType>({ word: "", meanings: [] });
 
     const checkVocabHandler = (e: React.FormEvent) => {
         e.preventDefault();
-        const data = new FormData(e.target as HTMLFormElement);
+        const form = new FormData(e.target as HTMLFormElement);
 
-        // set the fetched vocab into state
-        setWordMeaning({
-            word: data.get("check_word") as string,
-            meaning: data.get("check_word") as string
-        });
+        checkVocab(form.get("check_word") as string, setWordMeaning, dispatch);
     }
+
+    useEffect(() => {
+        if(vocab_type==="check"){
+            const check_word = document.querySelector("#check_word") as HTMLInputElement;
+            check_word.focus();
+        }
+    }, [])
 
 
     return (
@@ -37,7 +52,7 @@ const CheckVocab = () => {
             </form>
 
             {
-                wordMeaning.word && <WordMeaning word={wordMeaning.word} meaning={wordMeaning.meaning} />
+                wordMeaning.word && wordMeaning.meanings.map((meaning) => <WordMeaning key={meaning.id} word={wordMeaning.word} meaning={meaning.meaning} />)
             }
         </CardStructure>
     );

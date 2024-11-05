@@ -21,7 +21,8 @@ export interface WordMeaningType {
 const AddVocab = () => {
     const dispatch = useDispatch();
     // states
-    const addVocabSuccess = useSelector((state: RootState) => state.vocab.successfull)
+    const vocab_type = useSelector((state: RootState) => state.vocab.vocab_action);
+    const addVocabSuccess = useSelector((state: RootState) => state.vocab.successfull);
     const addVocabError = useSelector((state: RootState) => state.vocab.error);
 
     // add vocab handler
@@ -41,7 +42,7 @@ const AddVocab = () => {
     }
 
     useEffect(() => {
-        if (addVocabSuccess) {
+        if (vocab_type==="add" && addVocabSuccess) {
             // resetting the form
             const form = document.querySelector("#add_vocab_form") as HTMLFormElement;
             form.reset();
@@ -70,7 +71,7 @@ const AddVocab = () => {
                 </div>
 
                 {/* Submission Error */}
-                {addVocabError && <FormError errorText={addVocabError} />}
+                {(vocab_type==="add" && addVocabError) && <FormError errorText={addVocabError} />}
 
                 {/* Submit Button */}
                 <Button label="Save" button_type="submit" />
