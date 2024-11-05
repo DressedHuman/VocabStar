@@ -9,7 +9,7 @@ import { checkVocab } from "../../features/vocab/vocabActions";
 import { RootState } from "../../app/store";
 
 
-interface CheckMeaningType {
+export interface CheckMeaningType {
     id: number;
     meaning: string;
 };
@@ -34,7 +34,7 @@ const CheckVocab = () => {
     }
 
     useEffect(() => {
-        if(vocab_type==="check"){
+        if (vocab_type === "check") {
             const check_word = document.querySelector("#check_word") as HTMLInputElement;
             check_word.focus();
         }
@@ -51,15 +51,18 @@ const CheckVocab = () => {
                 <InputField id="check_word" name="check_word" label="Word" placeholder="type word" lang="en" required />
                 <Button label="check" />
             </form>
-            
+
             {/* word meanings */}
             {
-                wordMeaning.word && wordMeaning.meanings.map((meaning) => <WordMeaning key={meaning.id} word={wordMeaning.word} meaning={meaning.meaning} />)
+                wordMeaning.word && wordMeaning.meanings.length>0 && <WordMeaning word={wordMeaning.word} meanings={wordMeaning.meanings} />
             }
 
             {/* error message */}
             {
-                checkVocabError && <p className="text-center text-[yellow] font-open-sans">You might not know this word!</p>
+                checkVocabError && <div className="flex flex-col justify-center items-center gap-1">
+                    <h3 className="text-white text-xl font-ubuntu">{wordMeaning.word}</h3>
+                    <p className="text-[yellow] font-open-sans">You might not know this word!</p>
+                </div>
             }
         </CardStructure>
     );

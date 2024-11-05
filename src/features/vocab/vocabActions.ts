@@ -39,7 +39,7 @@ export const checkVocab = async (word: string, setWordMeaning: (word_meanings: C
             params: new URLSearchParams({"word": word}),
         });
         setWordMeaning({
-            word: word,
+            word: response.data.word,
             meanings: response.data.meanings,
         });
         dispatch(checkVocabSuccess({"word": word}));
@@ -48,6 +48,10 @@ export const checkVocab = async (word: string, setWordMeaning: (word_meanings: C
         if(error instanceof AxiosError){
             error_message = error.response?.data?.detail || error_message;
         }
+        setWordMeaning({
+            word: word,
+            meanings: [],
+        })
         dispatch(checkVocabFailure({"word": word, "error": error_message}));
     }
 }

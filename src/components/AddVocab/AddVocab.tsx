@@ -30,11 +30,11 @@ const AddVocab = () => {
         e.preventDefault();
         const form = new FormData(e.target as HTMLFormElement);
         const word = form.get("from_word") as string;
-        const word_meanings = form.getAll("meaning[]") as string[];
+        const word_meanings = form.get("meaning") as string;
 
         const word_meaning: WordMeaningType = {
             word: word.toLowerCase(),
-            meanings: word_meanings.map((meaning) => {
+            meanings: word_meanings.split(",").map((meaning) => {
                 return { "meaning": meaning };
             }),
         };
@@ -67,7 +67,7 @@ const AddVocab = () => {
                     <InputField label="Word" name="from_word" id="from_word" placeholder="type english word" required focus />
 
                     {/* Meaning Field */}
-                    <InputField label="Meaning" name="meaning[]" placeholder="বাংলায় অর্থ লিখুন" lang="bn" required />
+                    <InputField label="Meaning(s)" name="meaning" placeholder="(,) দিয়ে একাধিক অর্থ লিখুন" lang="bn" required />
                 </div>
 
                 {/* Submission Error */}
