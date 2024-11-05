@@ -24,6 +24,7 @@ const CheckVocab = () => {
     // states
     const vocab_type = useSelector((state: RootState) => state.vocab.vocab_action);
     const [wordMeaning, setWordMeaning] = useState<CheckWordMeaningType>({ word: "", meanings: [] });
+    const checkVocabError = useSelector((state: RootState) => state.vocab.error);
 
     const checkVocabHandler = (e: React.FormEvent) => {
         e.preventDefault();
@@ -47,12 +48,18 @@ const CheckVocab = () => {
                 onSubmit={checkVocabHandler}
                 className="flex flex-col lg:flex-row justify-center items-center lg:items-end gap-5"
             >
-                <InputField id="check_word" name="check_word" label="Word" placeholder="type word" lang="en" />
+                <InputField id="check_word" name="check_word" label="Word" placeholder="type word" lang="en" required />
                 <Button label="check" />
             </form>
-
+            
+            {/* word meanings */}
             {
                 wordMeaning.word && wordMeaning.meanings.map((meaning) => <WordMeaning key={meaning.id} word={wordMeaning.word} meaning={meaning.meaning} />)
+            }
+
+            {/* error message */}
+            {
+                checkVocabError && <p className="text-center text-[yellow] font-open-sans">You might not know this word!</p>
             }
         </CardStructure>
     );
