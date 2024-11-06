@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import register, login, test_token, logout, get_user_info, add_vocab, check_vocab
+from .views import register, login, test_token, logout, get_user_info, add_vocab, check_vocab, get_an_MCQ, get_N_MCQs
 
 urlpatterns = [
     # auth related paths
@@ -12,4 +12,6 @@ urlpatterns = [
     # vocab related paths
     path("vocab/add_vocab/", add_vocab, name="add_vocab"),
     path("vocab/check_vocab/", check_vocab, name="check_vocab"),
+    path("vocab/get_an_MCQ/", get_an_MCQ, name="get_an_MCQ"),
+    path("vocab/get_N_MCQs/", get_N_MCQs, name="get_N_MCQs"),
 ]
