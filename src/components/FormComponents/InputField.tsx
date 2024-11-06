@@ -9,9 +9,10 @@ interface Props {
     lang?: "en" | "bn";
     required?: boolean;
     focus?: boolean;
+    onChangeHandler?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const InputField = ({ type = "text", label, name, id, placeholder, lang = "en", required = false, focus = false }: Props) => {
+const InputField = ({ type = "text", label, name, id, placeholder, lang = "en", required = false, focus = false, onChangeHandler }: Props) => {
 
     return (
         <div className="w-min flex flex-col justify-center items-center gap-1">
@@ -24,6 +25,7 @@ const InputField = ({ type = "text", label, name, id, placeholder, lang = "en", 
                 placeholder={placeholder}
                 required={required}
                 autoFocus={focus}
+                onChange={onChangeHandler}
             />
         </div>
     );

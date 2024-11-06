@@ -8,10 +8,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { register } from "../../features/auth/authActions";
 import FormError from "../FormComponents/FormError";
+import InputPhoneNumber from "../FormComponents/InputPhoneNumber";
 
 export interface RegistrationDataType {
     first_name: string;
     last_name: string;
+    university: string;
+    phone_num: string;
     email: string;
     password: string;
 };
@@ -32,6 +35,8 @@ const Register: React.FC = () => {
         const data: RegistrationDataType = {
             "first_name": form.get("first_name") as string,
             "last_name": form.get("last_name") as string,
+            "university": form.get("university") as string,
+            "phone_num": form.get("phone_num") as string,
             "email": form.get("email") as string,
             "password": form.get("password") as string,
         };
@@ -45,7 +50,7 @@ const Register: React.FC = () => {
     })
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-7">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
             <CardStructure additional_classes="md:col-span-3 md:border-y-0 md:border-l-0 md:rounded-none">
                 {/* Card Title */}
                 <CardTitle title="Register Here" />
@@ -56,10 +61,16 @@ const Register: React.FC = () => {
                     className="flex flex-col justify-center items-center gap-4"
                 >
                     {/* First Name Field */}
-                    <InputField id="first_name" name="first_name" label="Your First Name" placeholder="type first name" focus />
+                    <InputField id="first_name" name="first_name" label="Your First Name" placeholder="type first name" required focus />
 
                     {/* Last Name Field */}
-                    <InputField id="last_name" name="last_name" label="Your Last Name" placeholder="type last name" />
+                    <InputField id="last_name" name="last_name" label="Your Last Name" placeholder="type last name" required />
+                    
+                    {/* University Field */}
+                    <InputField id="university" name="university" label="Your University" placeholder="type university name" required />
+
+                    {/* Phone Number Field */}
+                    <InputPhoneNumber id="phone_num" name="phone_num" label="Your Phone Number" placeholder="+880 1345-444554" required />
 
                     {/* Email Field */}
                     <InputField type="email" id="email" name="email" label="Your Email" placeholder="type email" required />

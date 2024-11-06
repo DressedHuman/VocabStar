@@ -18,7 +18,7 @@ export const addVocab = async (word_meaning: WordMeaningType, dispatch: AppDispa
     } catch (error) {
         let error_message = "an error occurred";
         if(error instanceof AxiosError) {
-            error_message = error.response?.data?.detail?.word[0] || error_message;
+            error_message = error.response?.data?.detail || error.response?.data?.detail?.word[0] || error_message;
         }
         dispatch(addVocabFailure({"word": word_meaning.word, "error": error_message}));
     }
