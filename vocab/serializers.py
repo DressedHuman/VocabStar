@@ -21,12 +21,12 @@ class WordSerializer(ModelSerializer):
     
     class Meta:
         model = Word
-        fields = ["id", "owner", "word", "meanings"]
+        fields = ["id", "owner", "word", "meanings", "created_at", "updated_at"]
         extra_kwargs = {"owner": {"write_only": True}}
     
     def create(self, validated_data):
         meanings_data = validated_data.pop("meanings")
-        word = Word.objects.create(**validated_data)
+        word = Word.objects.create(owner=validated_data["owner"], word=validated_data["word"].strip().lower())
         for meaning_data in meanings_data:
-            Meaning.objects.create(word=word, **meaning_data)
+            Meaning.objects.create(word=word, meaning=meaning_data["meaning"].strip().lower())
         return word

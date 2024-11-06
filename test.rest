@@ -1,7 +1,7 @@
 POST http://localhost:8000/apis/user/register/
 Content-Type: application/json
 
-{"first_name": "Motiur Rahman", "last_name": "Mizan", "email": "mrmizan@howtodsa.com", "password": "password"}
+{"first_name": "Motiur Rahman", "last_name": "Mizan", "phone_num": "+880 1315 243425", "university": "Dhaka University", "email": "info@howtodsa.com", "password": "password"}
 ###
 
 POST http://localhost:8000/apis/user/login/
@@ -11,7 +11,7 @@ Content-Type: application/json
 ###
 
 GET http://localhost:8000/apis/user/test_token/
-Authorization: Token 5bd4ff48401036136defcb4930109588191bcfe1
+Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
 
 ###
 
@@ -22,14 +22,20 @@ Authorization: Token 5bd4ff48401036136defcb4930109588191bcfe1
 
 
 GET http://localhost:8000/apis/user/get_user_info/
-Authorization: Token 5bd4ff48401036136defcb4930109588191bcfe1
+Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
 
 ###
 
 
 POST http://localhost:8000/apis/vocab/add_vocab/
-Authorization: Token 5bd4ff48401036136defcb4930109588191bcfe1
+Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
 Content-Type: application/json
 
-{"word": "Live", "owner": 1, "meanings": [{"meaning": "বসবাস করা"}, {"meaning": "সরাসরি"}]}
+{"word": "Need", "owner": 1, "meanings": [{"meaning": "অভাব"}, {"meaning": "প্রয়োজন "}]}
+###
+
+
+GET http://localhost:8000/apis/vocab/check_vocab/?word=need
+Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
+Content-Type: application/json
 ###

@@ -13,8 +13,15 @@ class CustomUserManager(BaseUserManager):
         """
         if not email:
             raise ValueError(_("email must be set"))
-        email = self.normalize_email(email)
+        email = self.normalize_email(email.strip())
         user = self.model(email=email, **extra_fields)
+
+        # removing any leading and trailing whitespaces
+        user.first_name = user.first_name.strip()
+        user.last_name = user.last_name.strip()
+        user.university = user.university.strip()
+        
+        # setting user password
         user.set_password(password)
         user.save()
         return user

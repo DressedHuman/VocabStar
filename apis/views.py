@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -29,7 +31,7 @@ def register(req):
             user.set_password(req.data["password"])
             user.save()
             return Response({"detail": "User Registration Successful"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.error_messages, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # login view
 @api_view(['POST'])
@@ -41,6 +43,9 @@ def login(req):
             return Response({"detail": "Wrong Password"}, status=status.HTTP_400_BAD_REQUEST)
         token, created = Token.objects.get_or_create(user=user)
         serializer = CustomUserSerializer(instance=user)
+        # saving the last login time
+        user.last_login = timezone.now()
+
         return Response({
             "token": token.key,
             "user": serializer.data,
@@ -77,8 +82,30 @@ def get_user_info(req):
 def add_vocab(req):
     data = req.data.copy()
     data["owner"] = req.user.id
+    data["word"] = data["word"].strip().lower()
+
+    # if word exists for this user, respond with an error message
+    if Word.objects.filter(word=data["word"], owner=data["owner"]).exists():
+        return Response({"detail": "This word already exists!"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    # word doesn't exist. so save it.
     serializer = WordSerializer(data=data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response({"detail": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"details": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# check vocab view
+@api_view(["GET"])
+def check_vocab(req):
+    try:
+        word = Word.objects.get(word=req.query_params.get("word").strip().lower(), owner=req.user)
+        meanings = word.meanings.all()
+        meanings_list = list(map(lambda x: {"id": x.id, "meaning": x.meaning}, meanings))
+        return Response({"word": word.word, "meanings": meanings_list}, status=status.HTTP_200_OK)
+    except Exception as e:
+        print(e)
+        return Response({"detail": f"'{req.query_params.get("word")}' is not added yet!"}, status=status.HTTP_400_BAD_REQUEST)
+
+
