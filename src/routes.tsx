@@ -5,6 +5,7 @@ import ErrorPage from "./components/ErrorPage/ErrorPage";
 import PrivateRoute from "./components/PrivateRoute";
 import Register from "./components/Register/Register";
 import Login from "./components/Login/Login";
+import TakeTest from "./components/TakeTest/TakeTest";
 
 export const routes = createBrowserRouter([
     {
@@ -23,6 +24,10 @@ export const routes = createBrowserRouter([
             {
                 path: "/login",
                 element: <Login />,
+            },
+            {
+                path: "/take_test",
+                element: <TakeTest />,
             }
         ]
     }
