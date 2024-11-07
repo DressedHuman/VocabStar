@@ -45,11 +45,13 @@ const TakeTest = () => {
     useEffect(() => {
         if (status === "started") {
             const intervalId = setInterval(() => {
-                setSecondsRemaining(secondsRemaining => secondsRemaining - 1);
-                if (secondsRemaining == 0) {
-                    setStatus("ended");
-                    clearInterval(intervalId);
-                }
+                setSecondsRemaining(secondsRemaining => {
+                    if (secondsRemaining === 0) {
+                        setStatus("ended");
+                        clearInterval(intervalId);
+                    }
+                    return secondsRemaining - 1;
+                });
             }, 1000);
 
             return () => clearTimeout(intervalId);
