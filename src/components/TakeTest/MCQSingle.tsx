@@ -32,7 +32,7 @@ const MCQSingle = ({ data, index, total, showResult }: Props) => {
                             key={idx}
                             optionValue={option}
                             index={idx}
-                            correct_answer={showResult ? data.correct_answer : ""}
+                            correct_answer={showResult ? data.correct_answer : null}
                             checked={selectedOption === option}
                             checkHandler={checkHandler}
                             showResult={showResult}

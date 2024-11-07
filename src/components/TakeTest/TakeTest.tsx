@@ -5,6 +5,7 @@ import axiosInstance from "../../api/apiInstance";
 import { useLocation, useNavigate } from "react-router-dom";
 import MCQSingle from "./MCQSingle";
 import Button from "../FormComponents/Button";
+import Timer from "./Timer";
 
 export type OptionType = string;
 
@@ -18,6 +19,7 @@ const TakeTest = () => {
     const [testData, setTestData] = useState<MCQType[]>([]);
     const [error, setError] = useState("");
     const [status, setStatus] = useState<"not_yet_started" | "started" | "ended">("not_yet_started");
+    const [secondsRemaining, setSecondsRemaining] = useState<number>(0);
     const state = useLocation().state;
 
     useEffect(() => {
@@ -25,6 +27,10 @@ const TakeTest = () => {
         if (!N) {
             nav("/");
         }
+
+        // setting the duration
+        setSecondsRemaining(state.duration*60);
+
         axiosInstance.get(`/apis/vocab/get_N_MCQs/?N=${N}`)
             .then(res => res.data)
             .then(data => {
@@ -33,16 +39,20 @@ const TakeTest = () => {
             })
             .catch(err => {
                 setError(err.response.data.detail);
-            })
+            });
     }, []);
 
     useEffect(() => {
-        if(status==="started"){
-            const timeoutId = setTimeout(() => {
-                setStatus("ended");
-            }, state.duration*60*1000);
+        if (status === "started") {
+            const intervalId = setInterval(() => {
+                setSecondsRemaining(secondsRemaining => secondsRemaining - 1);
+                if (secondsRemaining == 0) {
+                    setStatus("ended");
+                    clearInterval(intervalId);
+                }
+            }, 1000);
 
-            return () => clearTimeout(timeoutId);
+            return () => clearTimeout(intervalId);
         }
     }, [status])
 
@@ -60,22 +70,25 @@ const TakeTest = () => {
 
                 // ready message with start button
                 status === "not_yet_started" && <div className="flex flex-col justify-center items-center gap-2">
-                    <CardTitle title="Are You Ready?" size="text-lg lg:text-xl" />
+                    <CardTitle title="Are You Ready To Take The Challenge?" size="text-lg lg:text-xl" />
                     <Button label="Start" onClickHandler={() => setStatus("started")} />
                 </div>
-                
+
                 ||
 
                 // test started with given MCQs
                 <div className="flex flex-col justify-center items-center gap-7">
                     <CardTitle title="Test Your Memory" />
+                    {
+                        status==="started" && <Timer totalSeconds={secondsRemaining} label="Time Left" sticky />
+                    }
                     <div className="flex flex-col gap-3 md:gap-5 lg:gap-7">
                         {
-                            testData.map((data, idx) => <MCQSingle key={idx} data={data} index={idx} total={testData.length} showResult={status==="ended"} />)
+                            testData.map((data, idx) => <MCQSingle key={idx} data={data} index={idx} total={testData.length} showResult={status === "ended"} />)
                         }
                     </div>
                     {
-                        status==="started" && <Button label="Submit" onClickHandler={() => setStatus("ended")} />
+                        status === "started" && <Button label="Submit" onClickHandler={() => setStatus("ended")} />
                     }
                     {/* {
                         status==="ended" && <Button label="Take Another Test" onClickHandler={() => nav("/take_test")} />
