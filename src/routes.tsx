@@ -27,7 +27,7 @@ export const routes = createBrowserRouter([
             },
             {
                 path: "/take_test",
-                element: <TakeTest />,
+                element: <PrivateRoute><TakeTest /></PrivateRoute>,
             }
         ]
     }

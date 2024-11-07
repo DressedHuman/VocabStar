@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import MCQSingle from "./MCQSingle";
 import Button from "../FormComponents/Button";
 import Timer from "./Timer";
+import TakeTestConfigForm, { TestConfigType } from "./TakeTestConfigForm";
 
 export type OptionType = string;
 
@@ -13,35 +14,68 @@ export interface MCQType {
     question: string;
     options: OptionType[];
     correct_answer: string;
-}
+};
+
+const initialTestConfig: TestConfigType = {
+    word_count: 0,
+    duration: 0,
+    configSet: false,
+};
+
 const TakeTest = () => {
     const nav = useNavigate();
-    const [testData, setTestData] = useState<MCQType[]>([]);
+    const location = useLocation();
+    // states
+    const [testConfig, setTestConfig] = useState<TestConfigType>(initialTestConfig);
+    const [questionsData, setQuestionsData] = useState<MCQType[]>([]);
     const [error, setError] = useState("");
-    const [status, setStatus] = useState<"not_yet_started" | "started" | "ended">("not_yet_started");
+    const [status, setStatus] = useState<"not_yet_started" | "yet_to_start" | "started" | "ended">("not_yet_started");
     const [secondsRemaining, setSecondsRemaining] = useState<number>(0);
-    const state = useLocation().state;
 
+    // setting the config
     useEffect(() => {
-        const N = state.word_count;
-        if (!N) {
-            nav("/");
+        let cfg;
+        try {
+            cfg = {
+                word_count: location.state.word_count,
+                duration: location.state.duration,
+                configSet: location.state.configSet,
+            };
+        } catch (error) {
+            return console.error(error);
         }
 
-        // setting the duration
-        setSecondsRemaining(state.duration*60);
+        setTestConfig(cfg);
 
-        axiosInstance.get(`/apis/vocab/get_N_MCQs/?N=${N}`)
+        if (cfg.configSet) {
+            setStatus("yet_to_start")
+        }
+    }, []);
+
+
+    // fetching question data
+    useEffect(() => {
+        axiosInstance.get(`/apis/vocab/get_N_MCQs/?N=${testConfig.word_count}`)
             .then(res => res.data)
             .then(data => {
                 setError("");
-                setTestData(data);
+                setQuestionsData(data);
             })
             .catch(err => {
                 setError(err.response.data.detail);
             });
-    }, []);
+    }, [testConfig]);
 
+
+
+    // setting the test duration
+    useEffect(() => {
+        // setting the duration
+        setSecondsRemaining(testConfig.duration * 60);
+    }, [testConfig]);
+
+
+    // timer handler
     useEffect(() => {
         if (status === "started") {
             const intervalId = setInterval(() => {
@@ -56,7 +90,28 @@ const TakeTest = () => {
 
             return () => clearTimeout(intervalId);
         }
-    }, [status])
+    }, [status]);
+
+
+    // take test config handler
+    const configHandler = (config: TestConfigType) => {
+        setTestConfig(config);
+        setStatus("yet_to_start");
+    }
+
+    // take another test onClick handler
+    const takeAnotherTestHandler = () => {
+        setTestConfig(initialTestConfig);
+        nav(location.pathname, {});
+    }
+
+    if (!testConfig.configSet) {
+        return (
+            <CardStructure additional_classes="border-none flex justify-center items-center">
+                <TakeTestConfigForm configHandler={configHandler} />
+            </CardStructure>
+        )
+    }
 
 
     return (
@@ -71,7 +126,7 @@ const TakeTest = () => {
                 ||
 
                 // ready message with start button
-                status === "not_yet_started" && <div className="flex flex-col justify-center items-center gap-2">
+                status === "yet_to_start" && <div className="flex flex-col justify-center items-center gap-2">
                     <CardTitle title="Are You Ready To Take The Challenge?" size="text-lg lg:text-xl" />
                     <Button label="Start" onClickHandler={() => setStatus("started")} />
                 </div>
@@ -82,19 +137,19 @@ const TakeTest = () => {
                 <div className="flex flex-col justify-center items-center gap-7">
                     <CardTitle title="Test Your Memory" />
                     {
-                        status==="started" && <Timer totalSeconds={secondsRemaining} label="Time Left" sticky />
+                        status === "started" && <Timer totalSeconds={secondsRemaining} label="Time Left" sticky />
                     }
                     <div className="flex flex-col gap-3 md:gap-5 lg:gap-7">
                         {
-                            testData.map((data, idx) => <MCQSingle key={idx} data={data} index={idx} total={testData.length} showResult={status === "ended"} />)
+                            questionsData.map((data, idx) => <MCQSingle key={idx} data={data} index={idx} total={questionsData.length} showResult={status === "ended"} />)
                         }
                     </div>
                     {
                         status === "started" && <Button label="Submit" onClickHandler={() => setStatus("ended")} />
                     }
-                    {/* {
-                        status==="ended" && <Button label="Take Another Test" onClickHandler={() => nav("/take_test")} />
-                    } */}
+                    {
+                        status === "ended" && <Button label="Take Another Test" onClickHandler={takeAnotherTestHandler} />
+                    }
                 </div>
             }
         </CardStructure>

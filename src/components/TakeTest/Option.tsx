@@ -11,7 +11,7 @@ interface Props {
 
 const Option = ({ optionValue, index, checked, correct_answer, showResult=false, checkHandler }: Props) => {
     return (
-        <div className="text-start lg:text-center">
+        <div className="text-start">
             <p
                 onClick={() => {
                     if (!showResult) {
