@@ -13,7 +13,7 @@ def gen_mcq(owner_words, word):
     )
 
     # generating incorrect options
-    other_words = list(owner_words.exclude(word=word)[:3])
+    other_words = list(owner_words.exclude(id=word.id).order_by("?")[:3])
     incorrect_meanings = list(
         map(
             lambda word: ", ".join(
@@ -28,7 +28,7 @@ def gen_mcq(owner_words, word):
     random.shuffle(options)
 
     return {
-        "question": f"What is/are the meaning of the word '{word.word.capitalize()}'?",
+        "question": f"Which of the following refer(s) to the word \"{word.word.capitalize()}\"?",
         "options": options,
         "correct_answer": correct_meaning,
     }

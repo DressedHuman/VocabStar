@@ -113,10 +113,29 @@ def add_vocab(req):
             {"detail": "This word already exists!"}, status=status.HTTP_400_BAD_REQUEST
         )
 
-    # word doesn't exist. so save it.
+    # word doesn't exist
+    # validate each meaning
+    for meaning_data in data["meanings"]:
+        if not meaning_data["meaning"]:
+            return Response(
+                {
+                    "detail": "No meaning can be empty",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+    
+    # word doesn't exist and all meanings are okay
     serializer = WordSerializer(data=data)
     if serializer.is_valid():
-        serializer.save()
+        word_instance = serializer.save()
+
+        for meaning_data in data["meanings"]:
+            meaning_serializer = MeaningSerializer(data=meaning_data)
+            if meaning_serializer.is_valid():
+                meaning_serializer.save(word=word_instance)
+            else:
+                return Response({"detials": meaning_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+            
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response({"details": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -143,19 +162,21 @@ def check_vocab(req):
         )
 
 
-
 # get an MCQ view
 @api_view(["GET"])
 def get_an_MCQ(req):
     owner_words = req.user.words.all()
-    
+
     # validating owner has at least 4 words
     if owner_words.count() < 4:
-        return Response({"detail": "You need at least 4 words to create an MCQ."}, status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response(
+            {"detail": "You need at least 4 words to create an MCQ."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
     word = random.choice(list((owner_words)))
 
-    response = gen_mcq(owner_words.order_by("?"), word)
+    response = gen_mcq(owner_words.exclude(word=word).order_by("?"), word)
     return Response(response, status=status.HTTP_200_OK)
 
 
@@ -164,16 +185,24 @@ def get_an_MCQ(req):
 def get_N_MCQs(req):
     N = int(req.query_params.get("N"))
     owner_words = req.user.words.all()
-    
+
     # validating owner has at least 4 words
     if owner_words.count() < 4:
-        return Response({"detail": "You need at least 4 words to create an MCQ."}, status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response(
+            {"detail": "You need at least 4 words to take an MCQ test."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+    elif owner_words.count() < N:
+        return Response(
+            {"detail": f"You don't have {N} words saved."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
     N_words = random.sample(list(owner_words), N)
 
     mcq_data = []
     for word in N_words:
-        response = gen_mcq(owner_words, word)
+        response = gen_mcq(owner_words.exclude(word=word), word)
         mcq_data.append(response)
-    
+
     return Response(mcq_data, status=status.HTTP_200_OK)
