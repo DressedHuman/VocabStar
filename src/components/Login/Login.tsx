@@ -8,6 +8,7 @@ import { login } from "../../features/auth/authActions";
 import { RootState } from "../../app/store";
 import FormError from "../FormComponents/FormError";
 import { useEffect } from "react";
+import Loader from "../Loader/Loader";
 
 export interface CredentialsType {
     email: string;
@@ -19,6 +20,7 @@ const Login: React.FC = () => {
     const dispatch = useDispatch();
 
     // states
+    const isLoading = useSelector((state: RootState) => state.auth.loading);
     const loginError = useSelector((state: RootState) => state.auth.error);
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
@@ -41,6 +43,12 @@ const Login: React.FC = () => {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-5 gap-7">
+            {/* loader component */}
+            {
+                isLoading && <Loader />
+            }
+
+            {/* login card */}
             <CardStructure additional_classes="md:col-span-3 md:border-y-0 md:border-l-0 md:rounded-none">
                 {/* Card Title */}
                 <CardTitle title="Login Here" />

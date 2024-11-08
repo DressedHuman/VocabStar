@@ -2,21 +2,26 @@ import { useState } from "react";
 import CardStructure from "../CardComponents/CardStructure";
 import CardTitle from "../CardComponents/CardTitle";
 import Option from "./Option";
-import { MCQType, OptionType } from "./TakeTest";
+import { MCQType, OptionType, SelectedOptionType } from "./TakeTest";
 
 interface Props {
     data: MCQType;
     index: number;
     total: number;
     showResult: boolean;
+    setSelectedOptions: (updater: (selOptions: SelectedOptionType[]) => SelectedOptionType[]) => void;
 };
 
-const MCQSingle = ({ data, index, total, showResult }: Props) => {
+const MCQSingle = ({ data, index, total, showResult, setSelectedOptions }: Props) => {
     const [selectedOption, setSelectedOption] = useState<OptionType>();
 
     // check handler
     const checkHandler = (option: OptionType) => {
         setSelectedOption(option);
+        setSelectedOptions((selectedOptions) => {
+            selectedOptions[index] = option;
+            return selectedOptions;
+        })
     }
 
     return (

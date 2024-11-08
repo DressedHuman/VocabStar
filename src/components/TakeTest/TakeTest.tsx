@@ -7,13 +7,27 @@ import MCQSingle from "./MCQSingle";
 import Button from "../FormComponents/Button";
 import Timer from "./Timer";
 import TakeTestConfigForm, { TestConfigType } from "./TakeTestConfigForm";
+import { useDispatch, useSelector } from "react-redux";
+import { faceMCQDataStart, faceMCQDataSuccess } from "../../features/test/testSlice";
+import { RootState } from "../../app/store";
+import Loader from "../Loader/Loader";
+import ResultModal from "./ResultModal";
 
 export type OptionType = string;
+export type SelectedOptionType = OptionType | null;
 
 export interface MCQType {
     question: string;
     options: OptionType[];
     correct_answer: string;
+};
+
+export interface ResultStateType {
+    total_marks: number;
+    gained_marks: number;
+    correct_answers: number;
+    wrong_answers: number;
+    not_attempted: number;
 };
 
 const initialTestConfig: TestConfigType = {
@@ -22,15 +36,31 @@ const initialTestConfig: TestConfigType = {
     configSet: false,
 };
 
+const initialResultState: ResultStateType = {
+    total_marks: 0,
+    gained_marks: 0,
+    correct_answers: 0,
+    wrong_answers: 0,
+    not_attempted: 0,
+};
+
 const TakeTest = () => {
     const nav = useNavigate();
     const location = useLocation();
+    const dispatch = useDispatch();
+
     // states
+    const isLoading = useSelector((state: RootState) => state.test.loading);
     const [testConfig, setTestConfig] = useState<TestConfigType>(initialTestConfig);
     const [questionsData, setQuestionsData] = useState<MCQType[]>([]);
     const [error, setError] = useState("");
     const [status, setStatus] = useState<"not_yet_started" | "yet_to_start" | "started" | "ended">("not_yet_started");
     const [secondsRemaining, setSecondsRemaining] = useState<number>(0);
+    // selected options states
+    const [selectedOptions, setSelectedOptions] = useState<SelectedOptionType[]>([]);
+    // result state
+    const [resultState, setResultState] = useState<ResultStateType>(initialResultState);
+    const [showResultModal, setShowResultModal] = useState<boolean>(false);
 
     // setting the config
     useEffect(() => {
@@ -48,13 +78,15 @@ const TakeTest = () => {
         setTestConfig(cfg);
 
         if (cfg.configSet) {
-            setStatus("yet_to_start")
+            setStatus("yet_to_start");
+            setSelectedOptions(new Array(cfg.word_count).fill(null));
         }
     }, []);
 
 
     // fetching question data
     useEffect(() => {
+        dispatch(faceMCQDataStart());
         axiosInstance.get(`/apis/vocab/get_N_MCQs/?N=${testConfig.word_count}`)
             .then(res => res.data)
             .then(data => {
@@ -63,6 +95,9 @@ const TakeTest = () => {
             })
             .catch(err => {
                 setError(err.response.data.detail);
+            })
+            .finally(() => {
+                dispatch(faceMCQDataSuccess());
             });
     }, [testConfig]);
 
@@ -81,8 +116,8 @@ const TakeTest = () => {
             const intervalId = setInterval(() => {
                 setSecondsRemaining(secondsRemaining => {
                     if (secondsRemaining === 0) {
-                        setStatus("ended");
                         clearInterval(intervalId);
+                        testSubmitHandler();
                     }
                     return secondsRemaining - 1;
                 });
@@ -93,9 +128,41 @@ const TakeTest = () => {
     }, [status]);
 
 
+    // test submit handler
+    const testSubmitHandler = () => {
+        setStatus("ended");
+
+        // calculating result
+        const result = selectedOptions.reduce((prevValue, currentValue, currentIndex) => {
+            if (currentValue === null) {
+                prevValue.not_attempted++;
+            }
+            else if (questionsData[currentIndex].correct_answer === currentValue) {
+                prevValue.gained_marks++;
+                prevValue.correct_answers++;
+            }
+            else {
+                prevValue.gained_marks = prevValue.gained_marks - .25;
+                prevValue.wrong_answers++;
+            }
+
+            return prevValue;
+        }, initialResultState);
+
+        // setting total marks
+        result.total_marks = testConfig.word_count;
+
+        setResultState(result);
+        setShowResultModal(true);
+
+
+        console.log(resultState);
+    }
+
     // take test config handler
     const configHandler = (config: TestConfigType) => {
         setTestConfig(config);
+        setSelectedOptions(new Array(config.word_count).fill(null));
         setStatus("yet_to_start");
     }
 
@@ -108,7 +175,11 @@ const TakeTest = () => {
     if (!testConfig.configSet) {
         return (
             <CardStructure additional_classes="border-none flex justify-center items-center">
-                <TakeTestConfigForm configHandler={configHandler} />
+                {/* loader component */}
+                {
+                    isLoading && <Loader />
+                }
+                <TakeTestConfigForm configHandler={configHandler} focus />
             </CardStructure>
         )
     }
@@ -116,6 +187,15 @@ const TakeTest = () => {
 
     return (
         <CardStructure additional_classes="border-none">
+            {/* loader component */}
+            {
+                isLoading && <Loader />
+            }
+
+            {/* result modal */}
+            <ResultModal openModal={showResultModal} setOpenModal={setShowResultModal} resultState={resultState} />
+
+
             {
                 // any error message here
                 error && <div className="flex flex-col justify-center items-center gap-2">
@@ -141,14 +221,17 @@ const TakeTest = () => {
                     }
                     <div className="flex flex-col gap-3 md:gap-5 lg:gap-7">
                         {
-                            questionsData.map((data, idx) => <MCQSingle key={idx} data={data} index={idx} total={questionsData.length} showResult={status === "ended"} />)
+                            questionsData.map((data, idx) => <MCQSingle key={idx} data={data} index={idx} total={questionsData.length} showResult={status === "ended"} setSelectedOptions={setSelectedOptions} />)
                         }
                     </div>
                     {
-                        status === "started" && <Button label="Submit" onClickHandler={() => setStatus("ended")} />
+                        status === "started" && <Button label="Submit" onClickHandler={testSubmitHandler} />
                     }
                     {
-                        status === "ended" && <Button label="Take Another Test" onClickHandler={takeAnotherTestHandler} />
+                        status === "ended" && <div className="flex flex-col md:flex-row justify-center items-center gap-3">
+                            <Button label="Show Result" onClickHandler={() => setShowResultModal(true)} />
+                            <Button label="Take Another Test" onClickHandler={takeAnotherTestHandler} />
+                        </div>
                     }
                 </div>
             }

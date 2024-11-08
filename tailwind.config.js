@@ -16,6 +16,7 @@ export default {
         "card_title": "#B1D4E0",
         "font_color": "#A7C6ED",
         "border_color": "#2E8BC0",
+        "bg_color": "#145DA0",
       }
     },
   },

@@ -9,6 +9,7 @@ import { RootState } from "../../app/store";
 import { register } from "../../features/auth/authActions";
 import FormError from "../FormComponents/FormError";
 import InputPhoneNumber from "../FormComponents/InputPhoneNumber";
+import Loader from "../Loader/Loader";
 
 export interface RegistrationDataType {
     first_name: string;
@@ -24,6 +25,7 @@ const Register: React.FC = () => {
     const dispatch = useDispatch();
 
     // states
+    const isLoading = useSelector((state: RootState) => state.auth.loading);
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
     const registerError = useSelector((state: RootState) => state.auth.error);
 
@@ -51,6 +53,12 @@ const Register: React.FC = () => {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
+            {/* loader component */}
+            {
+                isLoading && <Loader />
+            }
+
+            {/* registration card */}
             <CardStructure additional_classes="md:col-span-3 md:border-y-0 md:border-l-0 md:rounded-none">
                 {/* Card Title */}
                 <CardTitle title="Register Here" />

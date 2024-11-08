@@ -11,9 +11,10 @@ export interface TestConfigType {
 
 interface Props {
     configHandler: (config: TestConfigType) => void;
+    focus?: boolean;
 }
 
-const TakeTestConfigForm = ({configHandler}: Props) => {
+const TakeTestConfigForm = ({configHandler, focus }: Props) => {
 
     // Word Count Value Change Handler
     const wordCountValueChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +65,7 @@ const TakeTestConfigForm = ({configHandler}: Props) => {
                 className="flex flex-col justify-center items-center gap-5"
             >
                 {/* Word Count Field */}
-                <InputField type="number" label="Word Count" name="word_count" id="word_count" rowCol="row" placeholder="word count" required onChangeHandler={wordCountValueChangeHandler} />
+                <InputField type="number" label="Word Count" name="word_count" id="word_count" rowCol="row" placeholder="word count" required onChangeHandler={wordCountValueChangeHandler} focus={focus} />
 
                 {/* Duration Field */}
                 <InputField type="number" label="Duration (min)" name="duration" id="duration" rowCol="row"

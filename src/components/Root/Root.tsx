@@ -19,7 +19,6 @@ const Root = () => {
         // check if there is a token in localStorage
         const token = localStorage.getItem("token");
         if (token) {
-            console.log(token);
             get_user_info_with_token(token, dispatch);
         }
         else {
