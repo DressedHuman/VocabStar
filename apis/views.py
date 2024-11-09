@@ -185,7 +185,6 @@ def get_an_MCQ(req):
 def get_N_MCQs(req):
     N = int(req.query_params.get("N"))
     from_today = req.query_params.get("from_today") == "true"
-    print(from_today)
     owner_words = req.user.words.all()
 
     # if from today, filter owner words
