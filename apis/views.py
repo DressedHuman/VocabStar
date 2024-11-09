@@ -157,7 +157,7 @@ def check_vocab(req):
     except Exception as e:
         print(e)
         return Response(
-            {"detail": f"'{req.query_params.get("word")}' is not added yet!"},
+            {"detail": "This word doesn't exist!"},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
