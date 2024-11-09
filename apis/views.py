@@ -184,12 +184,19 @@ def get_an_MCQ(req):
 @api_view(["GET"])
 def get_N_MCQs(req):
     N = int(req.query_params.get("N"))
+    from_today = req.query_params.get("from_today") == "true"
+    print(from_today)
     owner_words = req.user.words.all()
+
+    # if from today, filter owner words
+    if from_today:
+        today = timezone.now().date()
+        owner_words = owner_words.filter(created_at__date=today)
 
     # validating owner has at least 4 words
     if owner_words.count() < 4:
         return Response(
-            {"detail": "You need at least 4 words to take an MCQ test."},
+            {"detail": "You need to learn and save at least 4 words today!" if from_today else "You need at least 4 words to take an MCQ test."},
             status=status.HTTP_400_BAD_REQUEST,
         )
     elif owner_words.count() < N:

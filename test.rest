@@ -31,7 +31,7 @@ POST http://localhost:8000/apis/vocab/add_vocab/
 Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
 Content-Type: application/json
 
-{"word": "Need", "owner": 1, "meanings": [{"meaning": "অভাব"}, {"meaning": "প্রয়োজন "}]}
+{"word": "fantasy", "owner": 1, "meanings": [{"meaning": "উদ্ভট কল্পনা"}, {"meaning": "কাল্পনিক "}]}
 ###
 
 
@@ -47,7 +47,7 @@ Content-Type: application/json
 ###
 
 
-GET http://localhost:8000/apis/vocab/get_N_MCQs/
+GET http://localhost:8000/apis/vocab/get_N_MCQs/?N=5
 Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
 Content-Type: application/json
 ###
