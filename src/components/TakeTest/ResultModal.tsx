@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import CardTitle from "../CardComponents/CardTitle";
 import Button from "../FormComponents/Button";
 import { ResultStateType } from "./TakeTest";
@@ -9,6 +10,16 @@ interface Props {
 }
 
 const ResultModal = ({ openModal, setOpenModal, resultState }: Props) => {
+    useEffect(() => {
+        const body = document.body as HTMLBodyElement;
+        if (openModal) {
+            body.classList.add("overflow-hidden");
+        }
+        else {
+            body.classList.remove("overflow-hidden");
+        }
+    });
+
     return (
         <>
             {/* instruction modal to add homework perfectly */}
@@ -42,7 +53,7 @@ const ResultModal = ({ openModal, setOpenModal, resultState }: Props) => {
                                 </div>
 
                                 {/* review answers button */}
-                                <Button label="Review Answers" onClickHandler={() => setOpenModal(false)} additional_classes="text-bg_color" />
+                                <Button label="Review Answers" onClickHandler={() => setOpenModal(false)} font_color="text-bg_color" />
                             </div>
                         </div>
                     </div>

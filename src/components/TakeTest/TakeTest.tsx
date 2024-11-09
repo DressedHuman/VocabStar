@@ -71,6 +71,9 @@ const TakeTest = () => {
                 duration: location.state.duration,
                 configSet: location.state.configSet,
             };
+
+            // clearing location states
+            window.history.replaceState({}, "");
         } catch (error) {
             return console.error(error);
         }
@@ -169,7 +172,6 @@ const TakeTest = () => {
     // take another test onClick handler
     const takeAnotherTestHandler = () => {
         setTestConfig(initialTestConfig);
-        nav(location.pathname, {});
     }
 
     if (!testConfig.configSet) {

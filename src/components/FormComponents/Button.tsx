@@ -1,15 +1,16 @@
 interface Props {
     label: string;
     button_type?: "submit" | "reset" | "button" | undefined;
+    font_color?: string;
     additional_classes?: string;
     onClickHandler?: () => void;
 }
 
-const Button = ({ label, button_type, additional_classes, onClickHandler }: Props) => {
+const Button = ({ label, button_type, font_color="text-font_color", additional_classes, onClickHandler }: Props) => {
     return (
         <button
             type={button_type}
-            className={`min-w-36 border-2 border-border_color px-3 py-1 text-font_color hover:text-white bg-transparent text-lg font-medium rounded-md relative overflow-hidden group ${additional_classes}`}
+            className={`min-w-36 border-2 border-border_color px-3 py-1 ${font_color} hover:text-white bg-transparent text-lg font-medium rounded-md relative overflow-hidden group ${additional_classes}`}
             onClick={onClickHandler}
         >
             {label}
