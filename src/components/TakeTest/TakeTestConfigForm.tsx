@@ -17,13 +17,13 @@ interface Props {
     focus?: boolean;
 }
 
-const TakeTestConfigForm = ({configHandler, focus }: Props) => {
+const TakeTestConfigForm = ({ configHandler, focus }: Props) => {
     const [fromTodayChecked, setFromTodayChecked] = useState<boolean>(false);
 
     // Word Count Value Change Handler
     const wordCountValueChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = parseFloat(e.target.value);
-        if(value<1) {
+        if (value < 1) {
             e.target.value = "1";
         }
         else {
@@ -35,7 +35,7 @@ const TakeTestConfigForm = ({configHandler, focus }: Props) => {
     // Duration Field Value Change Handler
     const durationValueChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = parseFloat(e.target.value);
-        if(value<1){
+        if (value < 1) {
             e.target.value = "1";
         }
         else {
@@ -69,15 +69,17 @@ const TakeTestConfigForm = ({configHandler, focus }: Props) => {
                 onSubmit={onSubmitHandler}
                 className="flex flex-col justify-center items-center gap-5"
             >
-                {/* Word Count Field */}
-                <InputField type="number" label="Word Count" name="word_count" id="word_count" rowCol="row" placeholder="word count" required onChangeHandler={wordCountValueChangeHandler} focus={focus} />
+                <div className="flex flex-col justify-center items-center gap-2 md:gap-4">
+                    {/* Word Count Field */}
+                    <InputField type="number" label="Word Count" name="word_count" id="word_count" rowCol="row" placeholder="word count" required onChangeHandler={wordCountValueChangeHandler} focus={focus} />
 
-                {/* Duration Field */}
-                <InputField type="number" label="Duration (min)" name="duration" id="duration" rowCol="row"
-                placeholder="duration in minute(s)" required onChangeHandler={durationValueChangeHandler} />
+                    {/* Duration Field */}
+                    <InputField type="number" label="Duration (min)" name="duration" id="duration" rowCol="row"
+                        placeholder="duration in minute(s)" required onChangeHandler={durationValueChangeHandler} />
 
-                {/* From Today Checkbox */}
-                <Checkbox label="from today only" defaultChecked={false} showCross size="small" onChange={() => setFromTodayChecked(!fromTodayChecked)} />
+                    {/* From Today Checkbox */}
+                    <Checkbox label="from today only" defaultChecked={false} showCross size="small" onChange={() => setFromTodayChecked(!fromTodayChecked)} />
+                </div>
 
                 {/* Submit Button */}
                 <Button label="Take Test" />

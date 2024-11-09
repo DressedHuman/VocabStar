@@ -8,10 +8,10 @@ interface Props {
 
 const PrivateRoute = ({ children }: Props) => {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
-    if (!isAuthenticated) {
-        return <Login />;
+    if (isAuthenticated) {
+        return children;
     }
-    return children;
+    return <Login />;
 };
 
 export default PrivateRoute;

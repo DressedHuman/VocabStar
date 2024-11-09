@@ -106,7 +106,7 @@ const TakeTest = () => {
             .finally(() => {
                 dispatch(faceMCQDataSuccess());
             });
-    }, [testConfig]);
+    }, [testConfig.configSet]);
 
 
 
@@ -185,13 +185,15 @@ const TakeTest = () => {
 
     if (!testConfig.configSet) {
         return (
-            <CardStructure additional_classes="border-none flex justify-center items-center">
-                {/* loader component */}
-                {
-                    isLoading && <Loader />
-                }
-                <TakeTestConfigForm configHandler={configHandler} focus />
-            </CardStructure>
+            <div className="grid gap-3 md:gap-5 lg:gap-7 row-auto">
+                <CardStructure additional_classes="border-none flex justify-center items-center">
+                    {/* loader component */}
+                    {
+                        isLoading && <Loader />
+                    }
+                    <TakeTestConfigForm configHandler={configHandler} focus />
+                </CardStructure>
+            </div>
         )
     }
 
