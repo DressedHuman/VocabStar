@@ -23,6 +23,7 @@ export interface MCQType {
 };
 
 export interface ResultStateType {
+    time_taken: number;
     total_marks: number;
     gained_marks: number;
     correct_answers: number;
@@ -34,9 +35,11 @@ const initialTestConfig: TestConfigType = {
     word_count: 0,
     duration: 0,
     configSet: false,
+    from_today: "false",
 };
 
 const initialResultState: ResultStateType = {
+    time_taken: 0,
     total_marks: 0,
     gained_marks: 0,
     correct_answers: 0,
@@ -70,6 +73,7 @@ const TakeTest = () => {
                 word_count: location.state.word_count,
                 duration: location.state.duration,
                 configSet: location.state.configSet,
+                from_today: location.state.from_today,
             };
 
             // clearing location states
@@ -90,7 +94,7 @@ const TakeTest = () => {
     // fetching question data
     useEffect(() => {
         dispatch(faceMCQDataStart());
-        axiosInstance.get(`/apis/vocab/get_N_MCQs/?N=${testConfig.word_count}`)
+        axiosInstance.get(`/apis/vocab/get_N_MCQs/?N=${testConfig.word_count}&from_today=${testConfig.from_today}`)
             .then(res => res.data)
             .then(data => {
                 setError("");
@@ -152,14 +156,12 @@ const TakeTest = () => {
             return prevValue;
         }, initialResultState);
 
-        // setting total marks
+        // setting total marks and time taken
         result.total_marks = testConfig.word_count;
+        result.time_taken = (testConfig.duration*60)-secondsRemaining;
 
         setResultState(result);
         setShowResultModal(true);
-
-
-        console.log(resultState);
     }
 
     // take test config handler

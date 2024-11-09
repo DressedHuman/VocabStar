@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import CardTitle from "../CardComponents/CardTitle";
 import Button from "../FormComponents/Button";
 import { ResultStateType } from "./TakeTest";
+// import Timer from "./Timer";
 
 interface Props {
     openModal: boolean;
@@ -36,6 +37,7 @@ const ResultModal = ({ openModal, setOpenModal, resultState }: Props) => {
                             <div className="max-h-[75vh] overflow-auto space-y-3 md:space-y-4 lg:space-y-5 flex flex-col justify-center items-center gap-5">
                                 {/* score out of total marks */}
                                 <CardTitle title={`Score: ${resultState.gained_marks}/${resultState.total_marks}`} size="text-2xl lg:text-3xl" color="text-bg_color" />
+                                {/* <Timer totalSeconds={resultState.time_taken} /> */}
 
                                 <div className="flex flex-wrap justify-center items-center gap-3 md:gap-5 font-semibold font-hind_siliguri">
                                     <div className="flex flex-col justify-center items-center gap-1 text-[green]">

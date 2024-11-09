@@ -1,12 +1,15 @@
+import { useState } from "react";
 import CardStructure from "../CardComponents/CardStructure";
 import CardTitle from "../CardComponents/CardTitle";
 import Button from "../FormComponents/Button";
+import Checkbox from "../FormComponents/CheckBox/CheckBox";
 import InputField from "../FormComponents/InputField";
 
 export interface TestConfigType {
     word_count: number;
     duration: number;
     configSet: boolean;
+    from_today: "true" | "false";
 };
 
 interface Props {
@@ -15,6 +18,7 @@ interface Props {
 }
 
 const TakeTestConfigForm = ({configHandler, focus }: Props) => {
+    const [fromTodayChecked, setFromTodayChecked] = useState<boolean>(false);
 
     // Word Count Value Change Handler
     const wordCountValueChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,6 +53,7 @@ const TakeTestConfigForm = ({configHandler, focus }: Props) => {
             "word_count": parseInt(form.get("word_count") as string),
             "duration": parseInt(form.get("duration") as string),
             "configSet": true,
+            "from_today": fromTodayChecked ? "true" : "false",
         };
 
         configHandler(take_test_config);
@@ -70,6 +75,9 @@ const TakeTestConfigForm = ({configHandler, focus }: Props) => {
                 {/* Duration Field */}
                 <InputField type="number" label="Duration (min)" name="duration" id="duration" rowCol="row"
                 placeholder="duration in minute(s)" required onChangeHandler={durationValueChangeHandler} />
+
+                {/* From Today Checkbox */}
+                <Checkbox label="from today only" defaultChecked={false} showCross size="small" onChange={() => setFromTodayChecked(!fromTodayChecked)} />
 
                 {/* Submit Button */}
                 <Button label="Take Test" />
