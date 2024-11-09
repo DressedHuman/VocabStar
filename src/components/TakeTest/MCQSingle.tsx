@@ -25,7 +25,7 @@ const MCQSingle = ({ data, index, total, showResult, setSelectedOptions }: Props
     }
 
     return (
-        <CardStructure additional_classes={showResult ? (selectedOption===data.correct_answer ? "border-4 !border-[green]" : (selectedOption ? "border-4 !border-[red]" : "")) : ""}>
+        <CardStructure additional_classes={showResult ? (selectedOption?.id===data.correct_answer.id ? "border-4 !border-[green]" : (selectedOption ? "border-4 !border-[red]" : "")) : ""}>
             <CardTitle title={`${index+1}/${total}: ${data.question}`} size="text-base lg:text-lg" />
 
             {/* Options */}

@@ -48,7 +48,7 @@ const Checkbox = ({ label, defaultChecked = false, size = 'medium', showCross = 
                 ${size === 'small' ? 'w-4 border-[1.5px] p-[1px] rounded' :
                         size === 'medium' ? 'w-5 border-[2px] p-[2px] rounded-md' :
                             size === 'large' ? 'w-7 border-[2px] p-[1px] rounded-md' : 'w-5 border-[2px] p-[2px] rounded-md'}
-                ${disabled ? "border-[gray]" : "border-border_color"}
+                ${disabled ? "border-[gray]" : "border-border_color cursor-pointer"}
             `}
                 draggable={false}
             >

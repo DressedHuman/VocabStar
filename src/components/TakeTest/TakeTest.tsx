@@ -13,13 +13,17 @@ import { RootState } from "../../app/store";
 import Loader from "../Loader/Loader";
 import ResultModal from "./ResultModal";
 
-export type OptionType = string;
+export interface OptionType {
+    id: number,
+    meaning: string;
+};
+
 export type SelectedOptionType = OptionType | null;
 
 export interface MCQType {
     question: string;
     options: OptionType[];
-    correct_answer: string;
+    correct_answer: OptionType;
 };
 
 export interface ResultStateType {
@@ -144,7 +148,7 @@ const TakeTest = () => {
             if (currentValue === null) {
                 prevValue.not_attempted++;
             }
-            else if (questionsData[currentIndex].correct_answer === currentValue) {
+            else if (questionsData[currentIndex].correct_answer.id === currentValue.id) {
                 prevValue.gained_marks++;
                 prevValue.correct_answers++;
             }
