@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import CardTitle from "../CardComponents/CardTitle";
 import Button from "../FormComponents/Button";
 import { ResultStateType } from "./TakeTest";
+import ResultItem from "./ResultItem";
 // import Timer from "./Timer";
 
 interface Props {
@@ -15,9 +16,11 @@ const ResultModal = ({ openModal, setOpenModal, resultState }: Props) => {
         const body = document.body as HTMLBodyElement;
         if (openModal) {
             body.classList.add("overflow-hidden");
+            body.setAttribute("area-hidden", "true");
         }
         else {
             body.classList.remove("overflow-hidden");
+            body.removeAttribute("area-hidden");
         }
     });
 
@@ -40,18 +43,12 @@ const ResultModal = ({ openModal, setOpenModal, resultState }: Props) => {
                                 {/* <Timer totalSeconds={resultState.time_taken} /> */}
 
                                 <div className="flex flex-wrap justify-center items-center gap-3 md:gap-5 font-semibold font-hind_siliguri">
-                                    <div className="flex flex-col justify-center items-center gap-1 text-[green]">
-                                        <p className="text-lg order-2 font-mono text-center">Right Answer(s)</p>
-                                        <span className="text-2xl">{resultState.correct_answers}</span>
-                                    </div>
-                                    <div className="flex flex-col justify-center items-center gap-1 text-[#ff3543]">
-                                        <p className="text-lg order-2 font-mono text-center">Wrong Answer(s)</p>
-                                        <span className="text-2xl">{resultState.wrong_answers}</span>
-                                    </div>
-                                    <div className="flex flex-col justify-center items-center gap-1 text-[#222333]">
-                                        <p className="text-lg order-2 font-mono text-center">Not Attempted</p>
-                                        <span className="text-2xl">{resultState.not_attempted}</span>
-                                    </div>
+                                    {/* right answers */}
+                                    <ResultItem label="Correct Answer(s)" count={resultState.correct_answers} type="right" />
+                                    {/* wrong answers */}
+                                    <ResultItem label="Wrong Answer(s)" count={resultState.wrong_answers} type="wrong" />
+                                    {/* not attempted */}
+                                    <ResultItem label="Not Attempted" count={resultState.not_attempted} type="not_attempted" />
                                 </div>
 
                                 {/* review answers button */}

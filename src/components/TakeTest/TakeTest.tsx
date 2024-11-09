@@ -154,11 +154,18 @@ const TakeTest = () => {
             }
 
             return prevValue;
-        }, initialResultState);
+        }, {
+            time_taken: 0,
+            total_marks: 0,
+            gained_marks: 0,
+            correct_answers: 0,
+            wrong_answers: 0,
+            not_attempted: 0,
+        });
 
         // setting total marks and time taken
         result.total_marks = testConfig.word_count;
-        result.time_taken = (testConfig.duration*60)-secondsRemaining;
+        result.time_taken = (testConfig.duration * 60) - secondsRemaining;
 
         setResultState(result);
         setShowResultModal(true);
