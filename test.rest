@@ -35,19 +35,19 @@ Content-Type: application/json
 ###
 
 
-GET http://localhost:8000/apis/vocab/check_vocab/?word=need
+GET http://localhost:8000/apis/vocab/check_vocab/?word=fantasy
 Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
 Content-Type: application/json
 ###
 
 
-GET http://localhost:8000/apis/vocab/get_an_MCQ/
+GET http://localhost:8000/apis/vocab/get_an_MCQ/?to_from=b2e
 Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
 Content-Type: application/json
 ###
 
 
-GET http://localhost:8000/apis/vocab/get_N_MCQs/?N=5
+GET http://localhost:8000/apis/vocab/get_N_MCQs/?N=5&to_from=b2e
 Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
 Content-Type: application/json
 ###

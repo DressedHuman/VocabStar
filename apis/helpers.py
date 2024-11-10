@@ -1,20 +1,11 @@
 import random
 
 
-# helper function to generate a mcq
-def gen_mcq(owner_words, word):
-    # generating correct option
-    """correct_meaning = ", ".join(
-        list(
-            map(
-                lambda word: word.meaning,
-                word.meanings.all(),
-            )
-        )
-    )"""
+# helper function to generate an e2b mcq
+def gen_e2b_mcq(owner_words, word):
     correct_meaning = {
         "id": word.id,
-        "meaning": ", ".join([meaning.meaning for meaning in word.meanings.all()]),
+        "value": ", ".join([meaning.meaning for meaning in word.meanings.all()]),
     }
 
     # generating incorrect options
@@ -22,7 +13,7 @@ def gen_mcq(owner_words, word):
     incorrect_meanings = [
         {
             "id": word.id,
-            "meaning": ", ".join([meaning.meaning for meaning in word.meanings.all()]),
+            "value": ", ".join([meaning.meaning for meaning in word.meanings.all()]),
         }
         for word in other_words
     ]
@@ -36,3 +27,36 @@ def gen_mcq(owner_words, word):
         "options": options,
         "correct_answer": correct_meaning,
     }
+
+
+
+
+
+# helper function to generate a b2e mcq
+def gen_b2e_mcq(words, word):
+    correct_word = {
+        "id": word.id,
+        "value": word.word,
+    }
+    correct_word_meaning = ", ".join([meaning.meaning for meaning in word.meanings.all()])
+
+    # generating incorrect options
+    other_words = words.exclude(word=word.word).order_by("?")[:3]
+    incorrect_words = [
+        {
+            "id": word.id,
+            "value": word.word,
+        }
+        for word in other_words
+    ]
+
+    # creating randomized options
+    options = [correct_word] + incorrect_words
+    random.shuffle(options)
+
+    return {
+        "question": f"\"{correct_word_meaning}\" এর ইংরেজি পরিভাষা কোনটি?",
+        "options": options,
+        "correct_answer": correct_word,
+    }
+

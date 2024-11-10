@@ -16,7 +16,7 @@ from vocab.models import Word, Meaning
 from vocab.serializers import MeaningSerializer, WordSerializer
 
 # import helper functions
-from .helpers import gen_mcq
+from .helpers import gen_e2b_mcq, gen_b2e_mcq
 
 """ ------------------------------------------------------------------------------------
                             Auth Related Views
@@ -166,6 +166,7 @@ def check_vocab(req):
 @api_view(["GET"])
 def get_an_MCQ(req):
     owner_words = req.user.words.all()
+    to_from = "b2e" if req.query_params.get("to_from")=="b2e" else "e2b"
 
     # validating owner has at least 4 words
     if owner_words.count() < 4:
@@ -176,7 +177,10 @@ def get_an_MCQ(req):
 
     word = random.choice(list((owner_words)))
 
-    response = gen_mcq(owner_words.exclude(word=word).order_by("?"), word)
+    if to_from=="e2b":
+        response = gen_e2b_mcq(owner_words.exclude(word=word).order_by("?"), word)
+    else:
+        response = gen_b2e_mcq(owner_words.exclude(word=word).order_by("?"), word)
     return Response(response, status=status.HTTP_200_OK)
 
 
@@ -185,6 +189,7 @@ def get_an_MCQ(req):
 def get_N_MCQs(req):
     N = int(req.query_params.get("N"))
     from_today = req.query_params.get("from_today") == "true"
+    to_from = "b2e" if req.query_params.get("to_from")=="b2e" else "e2b"
     owner_words = req.user.words.all()
 
     # if from today, filter owner words
@@ -208,7 +213,10 @@ def get_N_MCQs(req):
 
     mcq_data = []
     for word in N_words:
-        response = gen_mcq(owner_words.exclude(word=word), word)
+        if to_from=="e2b":
+            response = gen_e2b_mcq(owner_words.exclude(word=word), word)
+        else:
+            response = gen_b2e_mcq(owner_words.exclude(word=word), word)
         mcq_data.append(response)
 
     return Response(mcq_data, status=status.HTTP_200_OK)
