@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import CardTitle from "../CardComponents/CardTitle";
-import Button from "../FormComponents/Button";
-import { ResultStateType } from "./TakeTest";
+import CardTitle from "../../CardComponents/CardTitle";
+import Button from "../../FormComponents/Button";
+import { ResultStateType } from "../TakeTest";
 import ResultItem from "./ResultItem";
 // import Timer from "./Timer";
 

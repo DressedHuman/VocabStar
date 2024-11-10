@@ -1,8 +1,8 @@
 import { useState } from "react";
-import CardStructure from "../CardComponents/CardStructure";
-import CardTitle from "../CardComponents/CardTitle";
+import CardStructure from "../../CardComponents/CardStructure";
+import CardTitle from "../../CardComponents/CardTitle";
 import Option from "./Option";
-import { MCQType, OptionType, SelectedOptionType } from "./TakeTest";
+import { MCQType, OptionType, SelectedOptionType } from "../TakeTest";
 
 interface Props {
     data: MCQType;

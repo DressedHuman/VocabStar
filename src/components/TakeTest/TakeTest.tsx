@@ -3,19 +3,19 @@ import CardStructure from "../CardComponents/CardStructure";
 import CardTitle from "../CardComponents/CardTitle";
 import axiosInstance from "../../api/apiInstance";
 import { useLocation, useNavigate } from "react-router-dom";
-import MCQSingle from "./MCQSingle";
+import MCQSingle from "./Test/MCQSingle";
 import Button from "../FormComponents/Button";
 import Timer from "./Timer";
-import TakeTestConfigForm, { TestConfigType } from "./TakeTestConfigForm";
+import TakeTestConfigForm, { TestConfigType } from "./Config/TakeTestConfigForm";
 import { useDispatch, useSelector } from "react-redux";
 import { faceMCQDataStart, faceMCQDataSuccess } from "../../features/test/testSlice";
 import { RootState } from "../../app/store";
 import Loader from "../Loader/Loader";
-import ResultModal from "./ResultModal";
+import ResultModal from "./Result/ResultModal";
 
 export interface OptionType {
     id: number,
-    meaning: string;
+    value: string;
 };
 
 export type SelectedOptionType = OptionType | null;
@@ -36,6 +36,7 @@ export interface ResultStateType {
 };
 
 const initialTestConfig: TestConfigType = {
+    to_from: "e2b",
     word_count: 0,
     duration: 0,
     configSet: false,
@@ -69,22 +70,18 @@ const TakeTest = () => {
     const [resultState, setResultState] = useState<ResultStateType>(initialResultState);
     const [showResultModal, setShowResultModal] = useState<boolean>(false);
 
-    // setting the config
+    // setting the config from location state
     useEffect(() => {
-        let cfg;
-        try {
-            cfg = {
-                word_count: location.state.word_count,
-                duration: location.state.duration,
-                configSet: location.state.configSet,
-                from_today: location.state.from_today,
-            };
+        const cfg: TestConfigType = {
+            to_from: location?.state?.to_from || "e2b",
+            word_count: location?.state?.word_count || 0,
+            duration: location?.state?.duration || 0,
+            configSet: location?.state?.configSet || false,
+            from_today: location?.state?.from_today || "false",
+        };
 
-            // clearing location states
-            window.history.replaceState({}, "");
-        } catch (error) {
-            return console.error(error);
-        }
+        // clearing location states
+        window.history.replaceState({}, "");
 
         setTestConfig(cfg);
 
@@ -98,7 +95,7 @@ const TakeTest = () => {
     // fetching question data
     useEffect(() => {
         dispatch(faceMCQDataStart());
-        axiosInstance.get(`/apis/vocab/get_N_MCQs/?N=${testConfig.word_count}&from_today=${testConfig.from_today}`)
+        axiosInstance.get(`/apis/vocab/get_N_MCQs/?N=${testConfig.word_count}&from_today=${testConfig.from_today}&to_from=${testConfig.to_from}`)
             .then(res => res.data)
             .then(data => {
                 setError("");

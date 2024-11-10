@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import AddVocab from "../AddVocab/AddVocab";
 import CheckVocab from "../CheckVocab/CheckVocab";
-import TakeTestConfigForm from "../TakeTest/TakeTestConfigForm";
+import TakeTestConfigForm from "../TakeTest/Config/TakeTestConfigForm";
 import Loader from "../Loader/Loader";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";

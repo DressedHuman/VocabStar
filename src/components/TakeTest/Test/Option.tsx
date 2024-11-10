@@ -1,4 +1,4 @@
-import { OptionType } from "./TakeTest";
+import { OptionType } from "../TakeTest";
 
 interface Props {
     optionValue: OptionType;
@@ -32,7 +32,7 @@ const Option = ({ optionValue, index, checked, correct_answer, showResult = fals
                     tabIndex={showResult ? -1 : 0}
                     className={`w-min text-wrap text-white font-hind_siliguri px-1 ${showResult ? "" : "cursor-pointer"} ${correct_answer?.id === optionValue.id ? "bg-[green] font-semibold" : showResult ? checked ? "bg-[red]" : "" : (checked && "bg-[black]")}`}
                 >
-                    {optionValue.meaning}
+                    {optionValue.value}
                 </span>
             </p>
         </div>

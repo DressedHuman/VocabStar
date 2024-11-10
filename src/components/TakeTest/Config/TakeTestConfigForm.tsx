@@ -1,23 +1,42 @@
 import { useState } from "react";
-import CardStructure from "../CardComponents/CardStructure";
-import CardTitle from "../CardComponents/CardTitle";
-import Button from "../FormComponents/Button";
-import Checkbox from "../FormComponents/CheckBox/CheckBox";
-import InputField from "../FormComponents/InputField";
+import CardStructure from "../../CardComponents/CardStructure";
+import Button from "../../FormComponents/Button";
+import Checkbox from "../../FormComponents/CheckBox/CheckBox";
+import InputField from "../../FormComponents/InputField";
+import ConfigFormHeader, { LangType } from "./ConfigFormHeader";
 
 export interface TestConfigType {
+    to_from: "e2b" | "b2e";
     word_count: number;
     duration: number;
     configSet: boolean;
     from_today: "true" | "false";
 };
 
+export interface ToFromLangs {
+    to: LangType;
+    from: LangType;
+};
+
 interface Props {
     configHandler: (config: TestConfigType) => void;
     focus?: boolean;
-}
+};
+
+
+const initialLangsValue: ToFromLangs = {
+    from: {
+        id: "e",
+        name: "English",
+    },
+    to: {
+        id: "b",
+        name: "Bengali",
+    },
+};
 
 const TakeTestConfigForm = ({ configHandler, focus }: Props) => {
+    const [toFromLangs, setToFromLangs] = useState<ToFromLangs>(initialLangsValue);
     const [fromTodayChecked, setFromTodayChecked] = useState<boolean>(false);
 
     // Word Count Value Change Handler
@@ -50,6 +69,7 @@ const TakeTestConfigForm = ({ configHandler, focus }: Props) => {
         const form = new FormData(e.target as HTMLFormElement);
 
         const take_test_config: TestConfigType = {
+            "to_from": `${toFromLangs.from.id}2${toFromLangs.to.id}` as "e2b" | "b2e",
             "word_count": parseInt(form.get("word_count") as string),
             "duration": parseInt(form.get("duration") as string),
             "configSet": true,
@@ -62,7 +82,7 @@ const TakeTestConfigForm = ({ configHandler, focus }: Props) => {
     return (
         <CardStructure>
             {/* Card Title */}
-            <CardTitle title="Take Test : English to Bengali" />
+            <ConfigFormHeader fromLang={toFromLangs.from} toLang={toFromLangs.to} swapper={setToFromLangs} />
 
             {/* Take Test Form */}
             <form
