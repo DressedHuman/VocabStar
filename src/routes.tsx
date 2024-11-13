@@ -6,6 +6,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Register from "./components/Register/Register";
 import Login from "./components/Login/Login";
 import TakeTest from "./components/TakeTest/TakeTest";
+import MyVocabsHome from "./components/MyVocabs/MyVocabsHome";
 
 export const routes = createBrowserRouter([
     {
@@ -28,6 +29,10 @@ export const routes = createBrowserRouter([
             {
                 path: "/take_test",
                 element: <PrivateRoute><TakeTest /></PrivateRoute>,
+            },
+            {
+                path: "/my_vocabs",
+                element: <PrivateRoute><MyVocabsHome /></PrivateRoute>
             }
         ]
     }
