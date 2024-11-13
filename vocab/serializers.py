@@ -11,6 +11,7 @@ class MeaningSerializer(ModelSerializer):
 
 
 class WordSerializer(ModelSerializer):
+    meanings = MeaningSerializer(many=True)
     class Meta:
         model = Word
         fields = ["id", "owner", "word", "meanings", "created_at", "updated_at"]
@@ -18,3 +19,11 @@ class WordSerializer(ModelSerializer):
             "owner": {"write_only": True},
             "meanings": {"read_only": True},
         }
+
+
+class WordSerializer2(ModelSerializer):
+    meanings = MeaningSerializer(many=True)
+    class Meta:
+        model = Word
+        fields = ["id", "word", "meanings"]
+        depth = 1

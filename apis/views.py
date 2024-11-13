@@ -16,7 +16,7 @@ from vocab.models import Word, Meaning
 from vocab.serializers import MeaningSerializer, WordSerializer
 
 # import helper functions
-from .helpers import gen_e2b_mcq, gen_b2e_mcq
+from .helpers import get_word_meaning, gen_e2b_mcq, gen_b2e_mcq
 
 """ ------------------------------------------------------------------------------------
                             Auth Related Views
@@ -162,6 +162,34 @@ def check_vocab(req):
         )
 
 
+# get user vocabs
+@api_view(["GET"])
+def get_user_vocabs(req):
+    words = req.user.words.all()
+    words_count = words.count()
+    try:
+        page_num = int(req.query_params.get("page"))
+    except ValueError:
+        page_num = 1
+    
+    if page_num<1 or words.count()<=(page_num-1)*10:
+        return Response({"detail": "Page not found!"}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        try:
+            words = words[(page_num-1)*10:(page_num*10)]
+        except:
+            words = words[(page_num-1)*10:]
+    
+    vocabs = []
+    for word in words:
+        word_meaning = get_word_meaning(word)
+        vocabs.append(word_meaning)
+    return Response({
+        "vocabs": vocabs,
+        "words_count": words_count,
+    }, status=status.HTTP_200_OK)
+
+
 # get an MCQ view
 @api_view(["GET"])
 def get_an_MCQ(req):
@@ -175,7 +203,7 @@ def get_an_MCQ(req):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    word = random.choice(list((owner_words)))
+    word = owner_words.order_by("?")[0]
 
     if to_from=="e2b":
         response = gen_e2b_mcq(owner_words.exclude(word=word).order_by("?"), word)

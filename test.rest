@@ -40,6 +40,12 @@ Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
 Content-Type: application/json
 ###
 
+GET http://localhost:8000/apis/vocab/get_user_vocabs/?page=2
+Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
+Content-Type: application/json
+
+###
+
 
 GET http://localhost:8000/apis/vocab/get_an_MCQ/?to_from=b2e
 Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b

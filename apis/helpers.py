@@ -1,4 +1,16 @@
 import random
+from vocab.serializers import WordSerializer2
+
+# helper function to generate word, meanings data dictionary
+def get_word_meaning(word):
+    """ meanings = ", ".join([meaning.meaning for meaning in word.meanings.all()])
+    return {
+        "id": word.id,
+        "word": word.word,
+        "meaning": meanings,
+    } """
+    meanings = WordSerializer2(instance=word)
+    return meanings.data
 
 
 # helper function to generate an e2b mcq
@@ -29,16 +41,15 @@ def gen_e2b_mcq(owner_words, word):
     }
 
 
-
-
-
 # helper function to generate a b2e mcq
 def gen_b2e_mcq(words, word):
     correct_word = {
         "id": word.id,
         "value": word.word,
     }
-    correct_word_meaning = ", ".join([meaning.meaning for meaning in word.meanings.all()])
+    correct_word_meaning = ", ".join(
+        [meaning.meaning for meaning in word.meanings.all()]
+    )
 
     # generating incorrect options
     other_words = words.exclude(word=word.word).order_by("?")[:3]
@@ -55,8 +66,7 @@ def gen_b2e_mcq(words, word):
     random.shuffle(options)
 
     return {
-        "question": f"\"{correct_word_meaning}\" এর ইংরেজি পরিভাষা কোনটি?",
+        "question": f'"{correct_word_meaning}" এর ইংরেজি পরিভাষা কোনটি?',
         "options": options,
         "correct_answer": correct_word,
     }
-
