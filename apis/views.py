@@ -216,14 +216,9 @@ def get_an_MCQ(req):
 @api_view(["GET"])
 def get_N_MCQs(req):
     N = int(req.query_params.get("N"))
-    from_today = req.query_params.get("from_today") == "true"
+    from_recent_only = req.query_params.get("from_recent_only") == "true"
     to_from = "b2e" if req.query_params.get("to_from")=="b2e" else "e2b"
     owner_words = req.user.words.all()
-
-    # if from today, filter owner words
-    if from_today:
-        today = timezone.now().date()
-        owner_words = owner_words.filter(created_at__date=today)
 
     # validating owner has at least 4 words
     if owner_words.count() < 4:
@@ -237,7 +232,11 @@ def get_N_MCQs(req):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    N_words = random.sample(list(owner_words), N)
+    # if from today, filter owner words
+    if from_recent_only:
+        N_words = owner_words.order_by("-id")[:N]
+    else:
+        N_words = random.sample(list(owner_words), N)
 
     mcq_data = []
     for word in N_words:
@@ -246,5 +245,9 @@ def get_N_MCQs(req):
         else:
             response = gen_b2e_mcq(owner_words.exclude(word=word), word)
         mcq_data.append(response)
+    
+    # re-shuffle mcq_data if from_recent_only is True
+    if from_recent_only:
+        random.shuffle(mcq_data)
 
     return Response(mcq_data, status=status.HTTP_200_OK)

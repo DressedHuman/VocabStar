@@ -11,7 +11,6 @@ class MeaningSerializer(ModelSerializer):
 
 
 class WordSerializer(ModelSerializer):
-    meanings = MeaningSerializer(many=True)
     class Meta:
         model = Word
         fields = ["id", "owner", "word", "meanings", "created_at", "updated_at"]
