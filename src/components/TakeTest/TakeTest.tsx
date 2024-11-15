@@ -40,7 +40,7 @@ const initialTestConfig: TestConfigType = {
     word_count: 0,
     duration: 0,
     configSet: false,
-    from_today: "false",
+    from_recent_only: "false",
 };
 
 const initialResultState: ResultStateType = {
@@ -77,7 +77,7 @@ const TakeTest = () => {
             word_count: location?.state?.word_count || 0,
             duration: location?.state?.duration || 0,
             configSet: location?.state?.configSet || false,
-            from_today: location?.state?.from_today || "false",
+            from_recent_only: location?.state?.from_recent_only || "false",
         };
 
         // clearing location states
@@ -95,7 +95,7 @@ const TakeTest = () => {
     // fetching question data
     useEffect(() => {
         dispatch(faceMCQDataStart());
-        axiosInstance.get(`/apis/vocab/get_N_MCQs/?N=${testConfig.word_count}&from_today=${testConfig.from_today}&to_from=${testConfig.to_from}`)
+        axiosInstance.get(`/apis/vocab/get_N_MCQs/?N=${testConfig.word_count}&from_recent_only=${testConfig.from_recent_only}&to_from=${testConfig.to_from}`)
             .then(res => res.data)
             .then(data => {
                 setError("");

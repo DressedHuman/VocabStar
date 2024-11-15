@@ -10,7 +10,7 @@ export interface TestConfigType {
     word_count: number;
     duration: number;
     configSet: boolean;
-    from_today: "true" | "false";
+    from_recent_only: "true" | "false";
 };
 
 export interface ToFromLangs {
@@ -37,7 +37,7 @@ const initialLangsValue: ToFromLangs = {
 
 const TakeTestConfigForm = ({ configHandler, focus }: Props) => {
     const [toFromLangs, setToFromLangs] = useState<ToFromLangs>(initialLangsValue);
-    const [fromTodayChecked, setFromTodayChecked] = useState<boolean>(false);
+    const [fromRecentOnly, setFromRecentOnly] = useState<boolean>(false);
 
     // Word Count Value Change Handler
     const wordCountValueChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +73,7 @@ const TakeTestConfigForm = ({ configHandler, focus }: Props) => {
             "word_count": parseInt(form.get("word_count") as string),
             "duration": parseInt(form.get("duration") as string),
             "configSet": true,
-            "from_today": fromTodayChecked ? "true" : "false",
+            "from_recent_only": fromRecentOnly ? "true" : "false",
         };
 
         configHandler(take_test_config);
@@ -98,7 +98,7 @@ const TakeTestConfigForm = ({ configHandler, focus }: Props) => {
                         placeholder="duration in minute(s)" required onChangeHandler={durationValueChangeHandler} />
 
                     {/* From Today Checkbox */}
-                    <Checkbox label="from today only" defaultChecked={false} showCross size="small" onChange={() => setFromTodayChecked(!fromTodayChecked)} />
+                    <Checkbox label="from recent only" defaultChecked={false} showCross={false} size="small" onChange={() => setFromRecentOnly(!fromRecentOnly)} />
                 </div>
 
                 {/* Submit Button */}
