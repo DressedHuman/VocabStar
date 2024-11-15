@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 interface InitialState {
     loading: boolean;
-    vocab_action: "add" | "check" | null;
+    vocab_action: "add" | "check" | "get_words" | null;
     error: string | null;
     successfull: boolean;
 };
@@ -51,6 +51,8 @@ const vocabSlice = createSlice({
                 toastId: `${action.payload.word}_failed`,
             });
         },
+        
+        // vocab checking related reducers
         checkVocabStart: (state) => {
             state.loading = true;
             state.vocab_action = "check";
@@ -78,9 +80,24 @@ const vocabSlice = createSlice({
             toast.error(action.payload.error, {
                 toastId: `${action.payload.word}_failed`,
             })
-        }
+        },
+
+        // get user words related reducers
+        getMyWordsStart: (state) => {
+            state.loading = true;
+            state.vocab_action = "get_words";
+            state.error = null;
+        },
+        getMyWordsSuccess: (state) => {
+            state.loading = false;
+            state.error = null;
+        },
+        getMyWordsFailure: (state, action) => {
+            state.loading = false;
+            state.error = action.payload.message;
+        },
     }
 });
 
-export const { addVocabStart, addVocabSuccess, addVocabFailure, checkVocabStart, checkVocabSuccess, checkVocabFailure } = vocabSlice.actions;
+export const { addVocabStart, addVocabSuccess, addVocabFailure, checkVocabStart, checkVocabSuccess, checkVocabFailure, getMyWordsStart, getMyWordsSuccess, getMyWordsFailure } = vocabSlice.actions;
 export default vocabSlice.reducer;
