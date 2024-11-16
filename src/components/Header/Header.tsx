@@ -12,7 +12,7 @@ interface PageLinkProps {
 const PageLink = ({ name, path }: PageLinkProps) => {
     return <NavLink
         to={path}
-        className={({ isActive, isPending }) => isActive ? "text-blue-500 md:p-0 dark:border-gray-700 block py-2 px-3 rounded" : isPending ? "" : "text-gray-900 dark:text-white hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-500 md:p-0 md:dark:hover:text-blue-300 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 block py-2 px-3 rounded"}
+        className={({ isActive, isPending }) => isActive ? "text-blue-500 md:p-0 dark:border-gray-700 block py-1 px-1 rounded" : isPending ? "" : "text-gray-900 dark:text-white hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-500 md:p-0 md:dark:hover:text-blue-300 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 block py-1 px-1 rounded"}
     >
         {name}
     </NavLink>
@@ -33,6 +33,10 @@ const Header = () => {
             name: "My Vocabs",
             path: "/my_vocabs",
         },
+        {
+            name: "Take Test",
+            path: "/take_test",
+        }
     ]
 
     // handler for toggling mobile menu
@@ -47,7 +51,7 @@ const Header = () => {
                 {/* left section */}
                 <Link to={"/"}>
                     <h2 className="text-center text-xl md:text-2xl lg:text-3xl text-app_name font-ubuntu">VocabStar</h2>
-                    <p className="text-sm md:text-base lg:text-lg text-border_color text-center font-hind_siliguri">শিখুন - গেঁথে রাখুন মগজে!</p>
+                    <p className="text-sm md:text-base lg:text-lg text-border_color text-center font-mono">Learn to Never Forget!</p>
                 </Link>
 
                 {/* right section */}
@@ -70,7 +74,7 @@ const Header = () => {
 
                 {/* middle section (for tablet or larger devices only) */}
                 <div className="w-full md:w-auto hidden md:flex items-center justify-between md:order-1" id="navbar-sticky">
-                    <ul className="flex flex-col justify-center items-center gap-3 p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:border-gray-700">
+                    <ul className="flex flex-col justify-center items-center gap-1 p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:border-gray-700">
                         {
                             links.map((link, idx) => <li key={idx}>
                                 <PageLink name={link.name} path={link.path} />
