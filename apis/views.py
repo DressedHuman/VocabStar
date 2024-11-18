@@ -167,6 +167,8 @@ def check_vocab(req):
 def get_user_vocabs(req):
     words = req.user.words.all()
     words_count = words.count()
+    if words_count==0:
+        return Response({"detail": "No word found!"}, status=status.HTTP_400_BAD_REQUEST)
     try:
         page_num = int(req.query_params.get("page"))
     except ValueError:

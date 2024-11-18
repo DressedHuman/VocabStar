@@ -31,7 +31,7 @@ POST http://localhost:8000/apis/vocab/add_vocab/
 Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
 Content-Type: application/json
 
-{"word": "fantasy", "owner": 1, "meanings": [{"meaning": "উদ্ভট কল্পনা"}, {"meaning": "কাল্পনিক "}]}
+{"word": "catastrophe", "owner": 1, "meanings": [{"meaning": "বিপর্যয়"}]}
 ###
 
 
