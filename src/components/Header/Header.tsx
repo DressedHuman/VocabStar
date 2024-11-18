@@ -49,7 +49,10 @@ const Header = () => {
             {/* initial interface */}
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
                 {/* left section */}
-                <Link to={"/"}>
+                <Link
+                    to={"/"}
+                    className='flex flex-col justify-center items-start gap-1 md:gap-2'
+                >
                     <h2 className="text-center text-xl md:text-2xl lg:text-3xl text-app_name font-ubuntu">VocabStar</h2>
                     <p className="text-sm md:text-base lg:text-lg text-border_color text-center font-mono">Learn to Never Forget!</p>
                 </Link>

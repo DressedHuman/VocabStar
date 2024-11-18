@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../../api/apiInstance";
 import { AxiosError } from "axios";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import MyVocabs from "./MyVocabs";
 import Button from "../FormComponents/Button";
 
@@ -18,18 +18,22 @@ export interface MeaningType {
     meaning: string;
 };
 
-export interface UserWordType {
+export interface UserVocabType {
     id: number;
     word: string;
     meanings: MeaningType[];
 };
 
 const MyVocabsHome = () => {
+    const nav = useNavigate();
     const dispatch = useDispatch();
     const isWordsLoading = useSelector((state: RootState) => state.vocab.loading);
-    const [userWords, setUserWords] = useState<UserWordType[]>([]);
-    const [wordsCount, setWordsCount] = useState<number>(0);
+    const vocabsError = useSelector((state: RootState) => state.vocab.error);
     const [searchParams, setSearchParams] = useSearchParams();
+
+    // states
+    const [userVocabs, setUserVocabs] = useState<UserVocabType[]>([]);
+    const [vocabsCount, setVocabsCount] = useState<number>(0);
 
     // user vocabs fetcher
     const faceVocabs = async (pageNum: string | null | undefined) => {
@@ -37,13 +41,13 @@ const MyVocabsHome = () => {
 
         try {
             const response = await axiosInstance.get(`/apis/vocab/get_user_vocabs/?page=${pageNum}`);
-            setUserWords(response.data.vocabs);
-            setWordsCount(response.data.words_count);
+            setUserVocabs(response.data.vocabs);
+            setVocabsCount(response.data.words_count);
             dispatch(getMyWordsSuccess());
         } catch (error) {
             if (error instanceof AxiosError) {
-                dispatch(getMyWordsFailure(error.message));
-                console.error(error);
+                setUserVocabs([]);
+                dispatch(getMyWordsFailure({ "message": error.response?.data?.detail }));
             }
         }
     }
@@ -87,11 +91,19 @@ const MyVocabsHome = () => {
                 isWordsLoading && <Loader />
             }
 
+            {/* display errors if there is any */}
+            {
+                vocabsError && <div className="flex flex-col justify-center items-center gap-3">
+                    <p className="text-[gold] text-xl md:text-2xl font-mono">{vocabsError}</p>
+                    <Button label="Go Home" onClickHandler={() => nav("/")} />
+                </div>
+            }
+
             {/* the words of the user after loading */}
             <div className="lg:grid lg:grid-cols-5">
                 <div className="hidden lg:flex lg:justify-center lg:items-center">
                     {
-                        parseInt(searchParams.get("page") as string) > 1 && parseInt(searchParams.get("page") as string) <= wordsCount && <button
+                        parseInt(searchParams.get("page") as string) > 1 && parseInt(searchParams.get("page") as string) <= vocabsCount && <button
                             onClick={() => pageChange("prev")}
                             className="text-white py-7 px-4 text-5xl hover:bg-bg_color"
                         >
@@ -103,18 +115,18 @@ const MyVocabsHome = () => {
                     }
                 </div>
                 <div className="col-span-3 space-y-7">
-                    <MyVocabs userWords={userWords} />
+                    <MyVocabs userWords={userVocabs} />
 
                     {/* prev and next buttons */}
                     <div className="lg:hidden flex flex-col md:flex-row justify-around items-center gap-2">
                         {
-                            parseInt(searchParams.get("page") as string) > 1 && parseInt(searchParams.get("page") as string) <= wordsCount && <Button
+                            parseInt(searchParams.get("page") as string) > 1 && (parseInt(searchParams.get("page") as string) - 1) * 10 <= vocabsCount && 10 < vocabsCount && <Button
                                 label="Prev"
                                 onClickHandler={() => pageChange("prev")}
                             />
                         }
                         {
-                            (!searchParams.get("page") || (parseInt(searchParams.get("page") as string) > 0 && parseInt(searchParams.get("page") as string) * 10 < wordsCount)) && <Button
+                            (!searchParams.get("page") && 10 < vocabsCount) || ((parseInt(searchParams.get("page") as string) > 0 && parseInt(searchParams.get("page") as string) * 10 < vocabsCount)) && <Button
                                 label="Next"
                                 onClickHandler={() => pageChange("next")}
                             />
@@ -123,7 +135,7 @@ const MyVocabsHome = () => {
                 </div>
                 <div className="hidden lg:flex lg:justify-center lg:items-center">
                     {
-                        (!searchParams.get("page") || (parseInt(searchParams.get("page") as string) > 0 && parseInt(searchParams.get("page") as string) * 10 < wordsCount)) && <button
+                        (!searchParams.get("page") && 10 < vocabsCount) || ((parseInt(searchParams.get("page") as string) > 0 && parseInt(searchParams.get("page") as string) * 10 < vocabsCount)) && <button
                             onClick={() => pageChange("next")}
                             className="text-white py-7 px-4 text-5xl hover:bg-bg_color"
                         >
