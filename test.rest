@@ -35,9 +35,16 @@ Content-Type: application/json
 ###
 
 
-GET http://localhost:8000/apis/vocab/check_vocab/?word=fantasy
+GET http://localhost:8000/apis/vocab/check_vocab/?word=catastrophe
 Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
 Content-Type: application/json
+###
+
+
+DELETE http://localhost:8000/apis/vocab/delete_vocab/?word_id=68
+Authorization: Token 446c166174ae2379bd31fafa5a3f537c6f3d839b
+Content-Type: application/json
+
 ###
 
 GET http://localhost:8000/apis/vocab/get_user_vocabs/?page=2

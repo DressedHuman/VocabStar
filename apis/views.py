@@ -123,7 +123,7 @@ def add_vocab(req):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
-    
+
     # word doesn't exist and all meanings are okay
     serializer = WordSerializer(data=data)
     if serializer.is_valid():
@@ -134,8 +134,11 @@ def add_vocab(req):
             if meaning_serializer.is_valid():
                 meaning_serializer.save(word=word_instance)
             else:
-                return Response({"detials": meaning_serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-            
+                return Response(
+                    {"detials": meaning_serializer.errors},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response({"details": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -152,7 +155,8 @@ def check_vocab(req):
             map(lambda x: {"id": x.id, "meaning": x.meaning}, meanings)
         )
         return Response(
-            {"word": word.word, "meanings": meanings_list}, status=status.HTTP_200_OK
+            {"id": word.id, "word": word.word, "meanings": meanings_list},
+            status=status.HTTP_200_OK,
         )
     except Exception as e:
         print(e)
@@ -162,41 +166,67 @@ def check_vocab(req):
         )
 
 
-# get user vocabs
+# delete a vocab view
+@api_view(["DELETE"])
+def delete_vocab(req):
+    try:
+        word_id = int(req.query_params.get("word_id"))
+        word = Word.objects.get(id=word_id, owner=req.user.id)
+        word_title = word.word
+        word.delete()
+        return Response(
+            {"detail": f"{word_title} was deleted successfully!"},
+            status=status.HTTP_204_NO_CONTENT,
+        )
+    except:
+        return Response(
+            {"detail": "Invalid word id!"}, status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+# get user vocabs view
 @api_view(["GET"])
 def get_user_vocabs(req):
     words = req.user.words.all()
     words_count = words.count()
-    if words_count==0:
-        return Response({"detail": "No word found!"}, status=status.HTTP_400_BAD_REQUEST)
+    if words_count == 0:
+        return Response(
+            {"detail": "No words found!"}, status=status.HTTP_400_BAD_REQUEST
+        )
     try:
         page_num = int(req.query_params.get("page"))
     except ValueError:
         page_num = 1
-    
-    if page_num<1 or words.count()<=(page_num-1)*10:
-        return Response({"detail": "Page not found!"}, status=status.HTTP_400_BAD_REQUEST)
+
+    from_to = {}
+    if page_num < 1 or words.count() <= (page_num - 1) * 10:
+        return Response(
+            {"detail": "Page not found!"}, status=status.HTTP_400_BAD_REQUEST
+        )
     else:
-        try:
-            words = words[(page_num-1)*10:(page_num*10)]
-        except:
-            words = words[(page_num-1)*10:]
-    
+        from_to["from"] = (page_num - 1) * 10 + 1
+        from_to["to"] = words_count if words_count < page_num * 10 else page_num * 10
+        words = words[(page_num - 1) * 10 : from_to["to"]]
+
     vocabs = []
     for word in words:
         word_meaning = get_word_meaning(word)
         vocabs.append(word_meaning)
-    return Response({
-        "vocabs": vocabs,
-        "words_count": words_count,
-    }, status=status.HTTP_200_OK)
+    return Response(
+        {
+            "vocabs": vocabs,
+            "words_count": words_count,
+            "from_to": from_to,
+        },
+        status=status.HTTP_200_OK,
+    )
 
 
 # get an MCQ view
 @api_view(["GET"])
 def get_an_MCQ(req):
     owner_words = req.user.words.all()
-    to_from = "b2e" if req.query_params.get("to_from")=="b2e" else "e2b"
+    to_from = "b2e" if req.query_params.get("to_from") == "b2e" else "e2b"
 
     # validating owner has at least 4 words
     if owner_words.count() < 4:
@@ -207,7 +237,7 @@ def get_an_MCQ(req):
 
     word = owner_words.order_by("?")[0]
 
-    if to_from=="e2b":
+    if to_from == "e2b":
         response = gen_e2b_mcq(owner_words.exclude(word=word).order_by("?"), word)
     else:
         response = gen_b2e_mcq(owner_words.exclude(word=word).order_by("?"), word)
@@ -219,13 +249,19 @@ def get_an_MCQ(req):
 def get_N_MCQs(req):
     N = int(req.query_params.get("N"))
     from_recent_only = req.query_params.get("from_recent_only") == "true"
-    to_from = "b2e" if req.query_params.get("to_from")=="b2e" else "e2b"
+    to_from = "b2e" if req.query_params.get("to_from") == "b2e" else "e2b"
     owner_words = req.user.words.all()
 
     # validating owner has at least 4 words
     if owner_words.count() < 4:
         return Response(
-            {"detail": "You need to learn and save at least 4 words today!" if from_today else "You need at least 4 words to take an MCQ test."},
+            {
+                "detail": (
+                    "You need to learn and save at least 4 words today!"
+                    if from_today
+                    else "You need at least 4 words to take an MCQ test."
+                )
+            },
             status=status.HTTP_400_BAD_REQUEST,
         )
     elif owner_words.count() < N:
@@ -242,12 +278,12 @@ def get_N_MCQs(req):
 
     mcq_data = []
     for word in N_words:
-        if to_from=="e2b":
+        if to_from == "e2b":
             response = gen_e2b_mcq(owner_words.exclude(word=word), word)
         else:
             response = gen_b2e_mcq(owner_words.exclude(word=word), word)
         mcq_data.append(response)
-    
+
     # re-shuffle mcq_data if from_recent_only is True
     if from_recent_only:
         random.shuffle(mcq_data)
