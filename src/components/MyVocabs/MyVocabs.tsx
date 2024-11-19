@@ -1,18 +1,20 @@
-import { UserWordType } from "./MyVocabsHome";
+import { UserVocabType } from "./MyVocabsHome";
 import ShowWord from "./ShowWord";
 
 interface Props {
-    userWords: UserWordType[];
+    userVocabs: UserVocabType[];
+    deleteVocabHandler: (id: number) => void;
 };
 
-const MyVocabs = ({ userWords }: Props) => {
+const MyVocabs = ({ userVocabs, deleteVocabHandler }: Props) => {
     return (
         <div>
             <div className="flex flex-col justify-center items-center gap-3 lg:gap-5 text-[gold]">
                 {
-                    userWords.map(word => <ShowWord
+                    userVocabs.map(word => <ShowWord
                         key={word.id}
                         word={word}
+                        deleteVocab={() => deleteVocabHandler(word.id)}
                     />)
                 }
             </div>

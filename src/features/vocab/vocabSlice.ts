@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 interface InitialState {
     loading: boolean;
-    vocab_action: "add" | "check" | "get_words" | null;
+    vocab_action: "add" | "check" | "delete" | "get_words" | null;
     error: string | null;
     successfull: boolean;
 };
@@ -82,6 +82,30 @@ const vocabSlice = createSlice({
             })
         },
 
+        // vocab deleting related
+        deleteVocabStart: (state) => {
+            state.loading = true;
+            state.vocab_action = "delete";
+            state.error = null;
+        },
+        deleteVocabSuccess: (state, action) => {
+            state.loading = false;
+            state.error = null;
+
+            // showing success toast
+            toast.success(action.payload.message, {
+                toastId: `deleted_word_${action.payload.id}`,
+            });
+        },
+        deleteVocabFailure: (state, action) => {
+            state.loading = false;
+            state.error = action.payload.error;
+
+            toast.error(action.payload.error, {
+                toastId: `delete_failed_${action.payload.id}`,
+            });
+        },
+
         // get user words related reducers
         getMyWordsStart: (state) => {
             state.loading = true;
@@ -99,5 +123,5 @@ const vocabSlice = createSlice({
     }
 });
 
-export const { addVocabStart, addVocabSuccess, addVocabFailure, checkVocabStart, checkVocabSuccess, checkVocabFailure, getMyWordsStart, getMyWordsSuccess, getMyWordsFailure } = vocabSlice.actions;
+export const { addVocabStart, addVocabSuccess, addVocabFailure, checkVocabStart, checkVocabSuccess, checkVocabFailure, deleteVocabStart, deleteVocabSuccess, deleteVocabFailure, getMyWordsStart, getMyWordsSuccess, getMyWordsFailure } = vocabSlice.actions;
 export default vocabSlice.reducer;
