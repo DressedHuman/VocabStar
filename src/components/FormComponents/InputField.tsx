@@ -18,12 +18,12 @@ const InputField = ({ type = "text", label, name, id, placeholder, lang = "en", 
 
     return (
         <div className={`w-min flex ${rowCol==="row" ? "flex-col md:flex-row" : "flex-col"} justify-center items-center ${gapBetweenLabelField}`}>
-            <h3 className="text-lg text-font_color font-medium text-nowrap">{label}</h3>
+            <h3 className="text-lg text-[#F5F5F5] font-medium text-nowrap">{label}</h3>
             {
                 rowCol==="row" && <p className="hidden md:block text-lg text-app_name font-bold">:</p>
             }
             <input
-                className={`w-[275px] border-2 border-[#B1D4E0] focus:border-[#2E8BC0] outline-none px-2 py-1 rounded-md ${lang === "en" ? "font-open-sans placeholder:font-open-sans" : lang === "bn" ? "font-hind_siliguri placeholder:font-hind_siliguri" : ""}`}
+                className={`w-[275px] border-2 border-[#455A64] focus:border-[#1E88E5] outline-none px-2 py-1 rounded-md bg-[#37474F] text-[#F5F5F5] placeholder-gray-400 ${lang === "en" ? "font-open-sans placeholder:font-open-sans" : lang === "bn" ? "font-hind_siliguri placeholder:font-hind_siliguri" : ""}`}
                 type={type}
                 name={name}
                 id={id}

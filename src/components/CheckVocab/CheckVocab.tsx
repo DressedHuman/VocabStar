@@ -59,9 +59,16 @@ const CheckVocab = () => {
 
             {/* error message */}
             {
-                checkVocabError && <div className="flex flex-col justify-center items-center gap-1">
-                    <h3 className="text-white text-xl font-ubuntu">{wordMeaning.word}</h3>
-                    <p className="text-[yellow] font-open-sans">You might not know this word!</p>
+                (vocab_type === "check" && checkVocabError && wordMeaning.word) &&
+                <div className="text-center mt-4">
+                    <h3 className="text-[#F5F5F5] text-xl font-montserrat mb-1">{wordMeaning.word}</h3>
+                    <p className="text-[#F44336] font-open-sans">You might not know this word!</p>
+                </div>
+            }
+            {
+                (vocab_type === "check" && checkVocabError && !wordMeaning.word) &&
+                <div className="text-center mt-4">
+                    <p className="text-[#F44336] font-open-sans">Error checking word. Please try again.</p>
                 </div>
             }
         </CardStructure>

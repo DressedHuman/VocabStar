@@ -13,12 +13,14 @@ const Home = () => {
     const isLoading = useSelector((state: RootState) => state.vocab.loading);
 
     return (
-        <div className="grid md:grid-cols-2 gap-3 md:gap-5 lg:gap-7 row-auto">
-            <AddVocab />
-            <div>
+        <div className="flex flex-col items-center gap-6 md:gap-8 lg:gap-10">
+            <div className="w-full max-w-xl">
+                <AddVocab />
+            </div>
+            <div className="w-full max-w-xl">
                 <CheckVocab />
             </div>
-            <div className="md:col-span-2 flex justify-center items-center">
+            <div className="w-full max-w-xl flex justify-center items-center">
                 <TakeTestConfigForm configHandler={(config) => nav("/take_test", { state: config })} />
             </div>
 

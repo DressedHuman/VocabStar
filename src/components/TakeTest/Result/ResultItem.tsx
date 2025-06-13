@@ -6,11 +6,11 @@ interface Props {
 
 const ResultItem = ({ label, count, type }: Props) => {
     return (
-        <div className={`flex flex-col justify-center items-center gap-1 ${type === "right" ? "text-[green]" :
-                type === "wrong" ? "text-[#ff3543]" : "text-[#222333]"
+        <div className={`flex flex-col justify-center items-center gap-1 ${type === "right" ? "text-[#4CAF50]" :
+                type === "wrong" ? "text-[#F44336]" : "text-gray-400"
             }`}>
-            <p className="text-base md:text-lg order-2 font-mono text-center">{label}</p>
-            <span className="text-2xl">{count}</span>
+            <p className="text-base md:text-lg order-2 font-open-sans text-center">{label}</p>
+            <span className="text-2xl font-montserrat font-semibold">{count}</span>
         </div>
     );
 };

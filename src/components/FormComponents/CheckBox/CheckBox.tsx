@@ -33,7 +33,7 @@ const Checkbox = ({ label, defaultChecked = false, size = 'medium', showCross = 
 
     return (
         <div className='flex justify-center items-center gap-1'>
-            <p className={`font-mono text-card_title
+            <p className={`font-open-sans text-[#F5F5F5]
                     ${size==="small" ? "text-base" :
                         size==="medium" ? "text-[20px]" :
                             size==="large" ? "text-[28px]" :
@@ -48,7 +48,7 @@ const Checkbox = ({ label, defaultChecked = false, size = 'medium', showCross = 
                 ${size === 'small' ? 'w-4 border-[1.5px] p-[1px] rounded' :
                         size === 'medium' ? 'w-5 border-[2px] p-[2px] rounded-md' :
                             size === 'large' ? 'w-7 border-[2px] p-[1px] rounded-md' : 'w-5 border-[2px] p-[2px] rounded-md'}
-                ${disabled ? "border-[gray]" : "border-border_color cursor-pointer"}
+                ${disabled ? "border-gray-600" : "border-[#1E88E5] cursor-pointer"}
             `}
                 draggable={false}
             >

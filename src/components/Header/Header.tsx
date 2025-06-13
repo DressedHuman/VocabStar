@@ -12,7 +12,7 @@ interface PageLinkProps {
 const PageLink = ({ name, path }: PageLinkProps) => {
     return <NavLink
         to={path}
-        className={({ isActive, isPending }) => isActive ? "text-blue-500 md:p-0 dark:border-gray-700 block py-1 px-1 rounded" : isPending ? "" : "text-gray-900 dark:text-white hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-500 md:p-0 md:dark:hover:text-blue-300 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 block py-1 px-1 rounded"}
+        className={({ isActive, isPending }) => isActive ? "text-[#FFC107] font-semibold md:p-0 block py-1 px-1 rounded" : isPending ? "" : "text-[#F5F5F5] hover:text-[#FFC107] md:p-0 block py-1 px-1 rounded"}
     >
         {name}
     </NavLink>
@@ -45,7 +45,7 @@ const Header = () => {
     }
 
     return (
-        <nav className="w-full start-0 border-b border-gray-200 dark:border-gray-600">
+        <nav className="w-full start-0 border-b border-[#37474F]">
             {/* initial interface */}
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
                 {/* left section */}
@@ -53,8 +53,8 @@ const Header = () => {
                     to={"/"}
                     className='flex flex-col justify-center items-start gap-1 md:gap-2'
                 >
-                    <h2 className="text-center text-xl md:text-2xl lg:text-3xl text-app_name font-ubuntu">VocabStar</h2>
-                    <p className="text-sm md:text-base lg:text-lg text-border_color text-center font-mono">Learn to Never Forget!</p>
+                    <h2 className="text-center text-xl md:text-2xl lg:text-3xl text-[#FFC107] font-montserrat">VocabStar</h2>
+                    <p className="text-sm md:text-base lg:text-lg text-gray-400 text-center font-open-sans">Learn to Never Forget!</p>
                 </Link>
 
                 {/* right section */}
@@ -64,7 +64,7 @@ const Header = () => {
                         onClick={toggleOpenClose}
                         data-collapse-toggle="navbar-sticky"
                         type="button"
-                        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-[#F5F5F5] rounded-lg md:hidden hover:bg-[#37474F] focus:outline-none focus:ring-2 focus:ring-[#1E88E5]"
                         aria-controls="navbar-sticky"
                         aria-expanded="false"
                     >
@@ -77,7 +77,7 @@ const Header = () => {
 
                 {/* middle section (for tablet or larger devices only) */}
                 <div className="w-full md:w-auto hidden md:flex items-center justify-between md:order-1" id="navbar-sticky">
-                    <ul className="flex flex-col justify-center items-center gap-1 p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:border-gray-700">
+                    <ul className="flex flex-col justify-center items-center gap-1 p-4 md:p-0 mt-4 font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
                         {
                             links.map((link, idx) => <li key={idx}>
                                 <PageLink name={link.name} path={link.path} />
@@ -87,9 +87,9 @@ const Header = () => {
                             isAuthenticated && <button
                                 onClick={() => {
                                     logoutUser(dispatch);
-                                    toggleOpenClose();
+                                    // toggleOpenClose(); // Not needed for desktop logout
                                 }}
-                                className='border border-border_color rounded-md text-white px-3 py-2 hover:bg-bg_color'
+                                className='font-medium text-[#F5F5F5] border border-[#1E88E5] rounded-md px-3 py-1 hover:bg-[#1E88E5] hover:text-white'
                             >
                                 Logout
                             </button>
@@ -100,7 +100,7 @@ const Header = () => {
 
             {/* menu options (for mobile devices only) */}
             <div className={`${isMobileMenuOpen ? "" : "hidden"} items-center justify-between w-full md:hidden`} id="navbar-sticky">
-                <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-[#37474F] rounded-lg bg-[#263238] md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
                     {
                         links.map((link, idx) => <li
                             key={idx}
@@ -108,7 +108,7 @@ const Header = () => {
                         >
                             <NavLink
                                 to={link.path}
-                                className={({ isActive, isPending }) => isActive ? "block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" : isPending ? "" : "block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"}
+                                className={({ isActive, isPending }) => isActive ? "block py-2 px-3 text-[#FFC107] font-semibold rounded" : isPending ? "" : "block py-2 px-3 text-[#F5F5F5] rounded hover:bg-[#37474F] hover:text-[#FFC107]"}
                             >
                                 {link.name}
                             </NavLink>
@@ -120,7 +120,7 @@ const Header = () => {
                                 logoutUser(dispatch);
                                 toggleOpenClose();
                             }}
-                            className="px-3 py-2 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                            className="block w-full text-left px-3 py-2 text-[#F5F5F5] rounded hover:bg-[#37474F] hover:text-[#FFC107]"
                         >
                             Logout
                         </button>

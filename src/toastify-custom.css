@@ -1,0 +1,29 @@
+/* src/toastify-custom.css */
+.Toastify__toast {
+    background-color: #263238; /* Dark Slate - Card Background */
+    color: #F5F5F5; /* Off-white text */
+    border-radius: 8px; /* Optional: match card border-radius */
+}
+
+.Toastify__toast--success {
+    background-color: #2E7D32; /* Darker Green */
+    color: #F5F5F5;
+}
+
+.Toastify__toast--error {
+    background-color: #C62828; /* Darker Red */
+    color: #F5F5F5;
+}
+
+.Toastify__progress-bar {
+    background: #1E88E5; /* Primary Blue */
+}
+
+.Toastify__close-button {
+    color: #F5F5F5;
+    opacity: 0.7;
+}
+
+.Toastify__close-button:hover {
+    opacity: 1;
+}

@@ -31,7 +31,7 @@
     width: 210px;
     height: 210px;
     border-radius: 100%;
-    background: #145DA0;
+    background: #1E88E5;
     -webkit-animation: preloader-fx 1.6s linear infinite;
     animation: preloader-fx 1.6s linear infinite;
 }

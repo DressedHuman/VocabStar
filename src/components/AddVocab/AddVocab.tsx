@@ -7,6 +7,7 @@ import { RootState } from "../../app/store";
 import FormError from "../FormComponents/FormError";
 import { addVocab } from "../../features/vocab/vocabActions";
 import { useEffect } from "react";
+import { toast } from 'react-toastify';
 
 interface MeaningType {
     "meaning": string;
@@ -42,14 +43,15 @@ const AddVocab = () => {
     }
 
     useEffect(() => {
-        if (vocab_type==="add" && addVocabSuccess) {
+        if (vocab_type === "add" && addVocabSuccess) {
             // resetting the form
             const form = document.querySelector("#add_vocab_form") as HTMLFormElement;
             form.reset();
             const wordElem = form.querySelector("#from_word") as HTMLInputElement;
             wordElem.focus();
+            toast.success("Vocabulary added successfully!");
         }
-    })
+    }, [vocab_type, addVocabSuccess, dispatch]);
 
     return (
         <CardStructure>

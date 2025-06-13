@@ -10,6 +10,7 @@ export default {
         "open-sans": ["Open Sans", "sans-serif"],
         "ubuntu": ["Ubuntu", "sans-serif"],
         "hind_siliguri": ["Hind Siliguri", "sans-serif"],
+        "montserrat": ["Montserrat", "sans-serif"],
       },
       colors: {
         "app_name": "#FFFFFF",

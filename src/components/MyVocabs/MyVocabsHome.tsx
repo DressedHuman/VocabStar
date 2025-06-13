@@ -128,7 +128,7 @@ const MyVocabsHome = () => {
             {/* display errors if there is any */}
             {
                 vocabsError && <div className="flex flex-col justify-center items-center gap-3">
-                    <p className="text-[gold] text-xl md:text-2xl font-mono">{vocabsError}</p>
+                    <p className="text-[#F44336] text-xl md:text-2xl font-open-sans">{vocabsError}</p>
                     <Button label="Go Home" onClickHandler={() => nav("/")} />
                 </div>
             }
@@ -141,7 +141,7 @@ const MyVocabsHome = () => {
                         {
                             showingResultsFromTo.from > 10 && <button
                                 onClick={() => pageChange("prev")}
-                                className="text-white py-7 px-4 text-5xl hover:bg-bg_color"
+                                className="text-white py-7 px-4 text-5xl hover:bg-[#37474F]"
                             >
                                 <img
                                     src={leftIcon}
@@ -153,7 +153,7 @@ const MyVocabsHome = () => {
 
                     {/* user vocabs list */}
                     <div className="col-span-3 space-y-7">
-                        <h2 className="text-center text-white text-lg font-mono font-medium">Showing {showingResultsFromTo.from}-{showingResultsFromTo.to} of {vocabsCount}</h2>
+                        <h2 className="text-center text-[#F5F5F5] text-lg font-open-sans font-normal">Showing {showingResultsFromTo.from}-{showingResultsFromTo.to} of {vocabsCount}</h2>
 
                         {/* my vocabs */}
                         <MyVocabs userVocabs={userVocabs} deleteVocabHandler={deleteVocab} />
@@ -180,7 +180,7 @@ const MyVocabsHome = () => {
                         {
                             showingResultsFromTo.to < vocabsCount && <button
                                 onClick={() => pageChange("next")}
-                                className="text-white py-7 px-4 text-5xl hover:bg-bg_color"
+                                className="text-white py-7 px-4 text-5xl hover:bg-[#37474F]"
                             >
                                 <img
                                     src={rightIcon}

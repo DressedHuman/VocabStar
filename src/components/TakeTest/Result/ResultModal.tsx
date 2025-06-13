@@ -34,12 +34,12 @@ const ResultModal = ({ openModal, setOpenModal, resultState }: Props) => {
                 <div className={`fixed flex justify-center items-center z-[100] ${openModal ? 'visible opacity-1' : 'invisible opacity-0'} inset-0 w-full h-full backdrop-blur-sm bg-none duration-100`}>
                     {/* stopped propagation for event bubble for the main modal content */}
                     {/* main modal here */}
-                    <div onClick={(e_) => e_.stopPropagation()} className={`absolute w-[87vw] md:w-[500px] lg:w-[750px] bg-[#aaaaff] drop-shadow-2xl rounded-lg ${openModal ? 'scale-100 opacity-1 duration-300 translate-y-0' : 'scale-0 -translate-y-20 opacity-0 duration-150'}`}>
+                    <div onClick={(e_) => e_.stopPropagation()} className={`absolute w-[87vw] md:w-[500px] lg:w-[750px] bg-[#263238] drop-shadow-2xl rounded-lg ${openModal ? 'scale-100 opacity-1 duration-300 translate-y-0' : 'scale-0 -translate-y-20 opacity-0 duration-150'}`}>
                         <div className="p-5 md:p-7 relative">
                             {/* modal message here */}
                             <div className="max-h-[75vh] overflow-auto space-y-3 md:space-y-4 lg:space-y-5 flex flex-col justify-center items-center gap-5">
                                 {/* score out of total marks */}
-                                <CardTitle title={`Score: ${resultState.gained_marks}/${resultState.total_marks}`} size="text-2xl lg:text-3xl" color="text-bg_color" />
+                                <CardTitle title={`Score: ${resultState.gained_marks}/${resultState.total_marks}`} size="text-2xl lg:text-3xl" color="text-[#FFC107]" />
                                 {/* <Timer totalSeconds={resultState.time_taken} /> */}
 
                                 <div className="flex flex-wrap justify-center items-center gap-3 md:gap-5 font-semibold font-hind_siliguri">
@@ -52,7 +52,7 @@ const ResultModal = ({ openModal, setOpenModal, resultState }: Props) => {
                                 </div>
 
                                 {/* review answers button */}
-                                <Button label="Review Answers" onClickHandler={() => setOpenModal(false)} font_color="text-bg_color" />
+                                <Button label="Review Answers" onClickHandler={() => setOpenModal(false)} />
                             </div>
                         </div>
                     </div>

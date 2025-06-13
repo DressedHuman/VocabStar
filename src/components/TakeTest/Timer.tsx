@@ -10,7 +10,7 @@ const Timer = ({ totalSeconds, label, sticky }: Props) => {
 
     return (
         <div>
-            <p className={`font-ubuntu text-lg text-card_title font-semibold text-nowrap ${sticky ? "sticky top-0 left-0 right-0" : ""}`}>{label ? `${label} - ` : ""}{`${minutes < 10 ? "0" : ""}${minutes}`} <span className="text-[green]">:</span> {`${seconds < 10 ? "0" : ""}${seconds}`}</p>
+            <p className={`font-open-sans text-lg text-[#F5F5F5] font-semibold text-nowrap ${sticky ? "sticky top-0 left-0 right-0" : ""}`}>{label ? `${label} - ` : ""}{`${minutes < 10 ? "0" : ""}${minutes}`} <span className="text-[#FFC107]">:</span> {`${seconds < 10 ? "0" : ""}${seconds}`}</p>
         </div>
     );
 };

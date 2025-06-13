@@ -9,7 +9,7 @@ interface Props {
 const MyVocabs = ({ userVocabs, deleteVocabHandler }: Props) => {
     return (
         <div>
-            <div className="flex flex-col justify-center items-center gap-3 lg:gap-5 text-[gold]">
+            <div className="flex flex-col justify-center items-center gap-3 lg:gap-5 text-[#F5F5F5]">
                 {
                     userVocabs.map(word => <ShowWord
                         key={word.id}

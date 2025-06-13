@@ -4,7 +4,7 @@ interface Props {
 
 const FormError = ({errorText}: Props) => {
     return (
-        <h3 className="text-sm font-medium font-mono text-yellow-400">{errorText}</h3>
+        <h3 className="text-sm font-medium font-open-sans text-[#F44336]">{errorText}</h3>
     );
 };
 

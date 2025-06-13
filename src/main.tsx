@@ -4,6 +4,8 @@ import { RouterProvider } from 'react-router-dom'
 import { routes } from './routes.tsx'
 import { Provider } from 'react-redux'
 import store from './app/store.ts'
+import "react-toastify/dist/ReactToastify.css";
+import "./toastify-custom.css";
 
 createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
