@@ -9,23 +9,24 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#2c3e50',
-        secondary: '#3498db',
+        primary: '#1A2B45',
+        secondary: '#4DB0A2',
         neutral: {
-          100: '#ecf0f1',
-          200: '#bdc3c7',
-          300: '#95a5a6',
-          400: '#7f8c8d',
-          500: '#6c7a7d',
+          50: '#F9FAFB',
+          100: '#F3F4F6',
+          200: '#E5E7EB',
+          300: '#D1D5DB',
+          400: '#9CA3AF',
+          500: '#6B7280',
+          // 600 removed
+          700: '#374151',
+          // 800 removed
+          900: '#111827',
         },
-        success: '#2ecc71',
-        error: '#e74c3c',
-        // Existing colors - keeping them for now
-        "app_name": "#FFFFFF",
-        "card_title": "#B1D4E0",
-        "font_color": "#A7C6ED",
-        "border_color": "#2E8BC0",
-        "bg_color": "#145DA0",
+        success: '#28A745',
+        error: '#DC3545',
+        warning: '#FFC107',
+        // accent color removed, and other neutrals adjusted to match the provided list
       },
       fontFamily: {
         sans: ['Inter', ...defaultTheme.fontFamily.sans],

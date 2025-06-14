@@ -40,9 +40,9 @@ const Checkbox = ({ label, defaultChecked = false, size = 'medium', showCross = 
                 onKeyDown={handleKeyDown}
                 className={`w-5 h-5 flex items-center justify-center border rounded
                     select-none transition-colors duration-150 ease-in-out
-                    focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-secondary
+                    focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary
                     ${checked
-                        ? 'bg-secondary border-secondary'
+                        ? 'bg-primary border-primary' // Changed to primary
                         : `bg-white border-neutral-300 ${disabled ? "" : "hover:border-primary"}`
                     }
                     ${disabled ? "border-neutral-200 bg-neutral-100" : ""}

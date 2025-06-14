@@ -44,7 +44,7 @@ const Option = ({ optionValue, index, checked, correct_answer, showResult = fals
     } else { // Active (not disabled, not showing result)
         buttonClasses += " cursor-pointer";
         if (checked) {
-            buttonClasses += " bg-secondary border-secondary text-white";
+            buttonClasses += " bg-secondary border-secondary text-neutral-900"; // Changed text-neutral-50 to text-neutral-900
         } else {
             buttonClasses += " bg-white hover:bg-neutral-100 border-neutral-300 text-neutral-500";
         }

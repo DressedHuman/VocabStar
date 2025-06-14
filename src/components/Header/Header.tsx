@@ -14,10 +14,10 @@ const PageLink = ({ name, path }: PageLinkProps) => {
     return <NavLink
         to={path}
         className={({ isActive }) =>
-            `block py-2 px-3 rounded md:p-0 ${
+            `block py-2 px-3 rounded md:p-0 font-sans ${ // Added font-sans
                 isActive
                     ? "text-secondary"
-                    : "text-neutral-100 hover:text-secondary"
+                    : "text-neutral-50 hover:text-secondary" // Changed text-neutral-100 to text-neutral-50
             }`
         }
     >
@@ -60,9 +60,8 @@ const Header = () => {
                     to={"/"}
                     className='flex flex-col justify-center items-start gap-1 md:gap-2'
                 >
-                    {/* Updated text color and font for site title and tagline */}
-                    <h2 className="text-center text-xl md:text-2xl lg:text-3xl text-neutral-100 font-heading">VocabStar</h2>
-                    <p className="text-sm md:text-base lg:text-lg text-neutral-200 text-center font-sans">Learn to Never Forget!</p>
+                    <h2 className="text-center text-xl md:text-2xl lg:text-3xl text-neutral-50 font-heading">VocabStar</h2> {/* Changed text-neutral-100 to text-neutral-50 */}
+                    <p className="text-sm md:text-base lg:text-lg text-neutral-200 text-center font-sans">Learn to Never Forget!</p> {/* text-neutral-200 is fine */}
                 </Link>
 
                 {/* right section - Hamburger Menu Button */}
@@ -71,8 +70,7 @@ const Header = () => {
                         onClick={toggleOpenClose}
                         data-collapse-toggle="navbar-sticky"
                         type="button"
-                        // Updated styles for hamburger menu button
-                        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-neutral-100 rounded-lg md:hidden hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-neutral-300"
+                        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-neutral-50 rounded-lg md:hidden hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-secondary" // Changed text-neutral-100 to text-neutral-50 and focus ring
                         aria-controls="navbar-sticky"
                         aria-expanded="false"
                     >
@@ -98,8 +96,7 @@ const Header = () => {
                                     logoutUser(dispatch);
                                     // toggleOpenClose(); // Removed toggleOpenClose as it's not relevant for desktop
                                 }}
-                                // Updated styles for logout button
-                                className='border border-secondary rounded-md text-neutral-100 px-3 py-2 hover:bg-secondary hover:text-primary'
+                                className='border border-secondary rounded-md text-neutral-50 px-3 py-2 hover:bg-secondary hover:text-primary' // Changed text-neutral-100 to text-neutral-50
                             >
                                 Logout
                             </button>
@@ -128,8 +125,7 @@ const Header = () => {
                                     logoutUser(dispatch);
                                     // toggleOpenClose(); // Already handled by li
                                 }}
-                                // Consistent styling with mobile PageLinks, but full width and explicit button look
-                                className="block w-full text-left py-2 px-3 rounded text-neutral-100 hover:text-secondary"
+                                className="block w-full text-left py-2 px-3 rounded text-neutral-50 hover:text-secondary font-sans" // Changed text-neutral-100 to text-neutral-50, added font-sans
                             >
                                 Logout
                             </button>

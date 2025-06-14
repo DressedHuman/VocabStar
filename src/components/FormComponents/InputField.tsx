@@ -50,8 +50,8 @@ const InputField = ({
                 disabled={disabled}
                 className={`w-full font-sans border border-neutral-300 px-3 py-2 rounded-md
                             focus:border-primary focus:ring-1 focus:ring-primary outline-none
-                            placeholder:text-neutral-300 transition-colors duration-150 ease-in-out
-                            ${disabled ? "bg-neutral-100 cursor-not-allowed" : "bg-white"}`}
+                            placeholder:text-neutral-500 transition-colors duration-150 ease-in-out
+                            ${disabled ? "bg-neutral-100 cursor-not-allowed text-neutral-500" : "bg-white"}`}
             />
         </div>
     );

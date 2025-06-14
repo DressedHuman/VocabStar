@@ -6,11 +6,11 @@
 @tailwind utilities;
 
 body {
-  @apply font-sans text-neutral-400 bg-white; /* Or a light neutral background */
+  @apply font-sans text-neutral-700 bg-neutral-50; /* Updated default text and background */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  @apply font-heading text-primary;
+  @apply font-heading text-neutral-900; /* Updated default heading color */
 }

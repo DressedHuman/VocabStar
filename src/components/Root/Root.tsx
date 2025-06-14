@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { get_user_info_with_token } from "../../features/auth/authActions";
 import { Slide, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PageContainer from "../UI/PageContainer"; // Import PageContainer
 
 const Root = () => {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
@@ -27,14 +28,15 @@ const Root = () => {
     }, []);
 
     return (
-        <div>
-            <div className="min-h-[100vh] px-5 md:px-7 lg:px-12 py-2 md:py-3 space-y-12 flex flex-col justify-between items-center">
-                <Header />
-                <div className="w-full grow">
-                    <Outlet />
-                </div>
-                <Footer />
-            </div>
+        // Using PageContainer for consistent page structure and background
+        // additional_classes ensure flex layout for header, outlet, footer
+        <PageContainer useNeutralBackground additional_classes="flex flex-col items-stretch min-h-screen">
+            <Header />
+            {/* grow class makes the Outlet container take available vertical space */}
+            <main className="w-full grow flex flex-col"> {/* Added flex flex-col to allow Outlet content to also grow if needed */}
+                <Outlet />
+            </main>
+            <Footer />
 
             {/* react toasts container */}
             <ToastContainer
