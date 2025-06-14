@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react"; // Import useCallback
 import axiosInstance from "../../api/apiInstance";
 import { AxiosError } from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -42,8 +42,8 @@ const MyVocabsHome = () => {
     const [vocabsCount, setVocabsCount] = useState<number>(0);
     const [showingResultsFromTo, setShowingResultsFromTo] = useState<ShowingResultsFromToType>({ from: 0, to: 0 });
 
-    // user vocabs fetcher
-    const faceVocabs = async (pageNum: string | null | undefined) => {
+    // user vocabs fetcher, memoized with useCallback
+    const faceVocabs = useCallback(async (pageNum: string | null | undefined) => {
         dispatch(getMyWordsStart());
 
         try {
@@ -58,7 +58,7 @@ const MyVocabsHome = () => {
                 dispatch(getMyWordsFailure({ "message": error.response?.data?.detail }));
             }
         }
-    }
+    }, [dispatch]); // dispatch is stable, so this effectively runs once per component instance
 
     // page changer
     const pageChange = (nextOrPrev: "next" | "prev") => {
@@ -115,9 +115,9 @@ const MyVocabsHome = () => {
 
     // fetching user words
     useEffect(() => {
-        const page: string | null = searchParams.get("page");
+        const page = searchParams.get("page");
         faceVocabs(page);
-    }, [searchParams.get("page"), vocabsCount])
+    }, [searchParams, vocabsCount, faceVocabs]); // Added faceVocabs and searchParams to dependencies
 
     // Determine if "Previous" and "Next" buttons should be disabled
     const isPrevDisabled = showingResultsFromTo.from <= 1; // Assuming 'from' is 1-indexed for the first item

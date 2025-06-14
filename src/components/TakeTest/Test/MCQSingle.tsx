@@ -7,13 +7,13 @@ import { MCQType, OptionType, SelectedOptionType } from "../TakeTest";
 interface Props {
     data: MCQType;
     index: number;
-    total: number;
+    // total: number; // Removed unused prop
     showResult: boolean;
     setSelectedOptions: (updater: (selOptions: SelectedOptionType[]) => SelectedOptionType[]) => void;
     disabled?: boolean; // Added disabled prop from TakeTest.tsx
 };
 
-const MCQSingle = ({ data, index, total, showResult, setSelectedOptions, disabled }: Props) => {
+const MCQSingle = ({ data, index, /* total, */ showResult, setSelectedOptions, disabled }: Props) => {
     const [selectedOption, setSelectedOption] = useState<OptionType | undefined>(undefined); // Ensure type consistency
 
     // check handler

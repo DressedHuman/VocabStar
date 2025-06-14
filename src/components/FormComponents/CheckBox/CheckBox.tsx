@@ -7,13 +7,13 @@ import { useState } from 'react';
 interface Props {
     label?: string;
     defaultChecked?: boolean,
-    size?: "small" | "medium" | "large";
+    // size prop removed
     showCross?: boolean;
     disabled?: boolean;
     onChange: () => void;
 };
 
-const Checkbox = ({ label, defaultChecked = false, size = 'medium', showCross = true, disabled = false, onChange }: Props) => {
+const Checkbox = ({ label, defaultChecked = false, /* size = 'medium' removed */ showCross = true, disabled = false, onChange }: Props) => {
     const [checked, setChecked] = useState(defaultChecked || false);
 
     const handleClick = () => {

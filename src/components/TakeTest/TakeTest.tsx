@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react"; // Import useCallback
 import CardStructure from "../CardComponents/CardStructure";
 import CardTitle from "../CardComponents/CardTitle";
 import axiosInstance from "../../api/apiInstance";
@@ -74,72 +74,65 @@ const TakeTest = () => {
 
     // setting the config from location state
     useEffect(() => {
-        const cfg: TestConfigType = {
-            to_from: location?.state?.to_from || "e2b",
-            word_count: location?.state?.word_count || 0,
-            duration: location?.state?.duration || 0,
-            configSet: location?.state?.configSet || false,
-            from_recent_only: location?.state?.from_recent_only || "false",
-        };
+        // Only run if location.state has actual values to prevent resetting config on navigation
+        if (location.state) {
+            const {
+                to_from = "e2b",
+                word_count = 0,
+                duration = 0,
+                configSet = false,
+                from_recent_only = "false",
+            } = location.state as Partial<TestConfigType>;
 
-        // clearing location states
-        window.history.replaceState({}, "");
+            const cfg: TestConfigType = { to_from, word_count, duration, configSet, from_recent_only };
 
-        setTestConfig(cfg);
+            // clearing location states
+            window.history.replaceState({}, "");
 
-        if (cfg.configSet) {
-            setStatus("yet_to_start");
-            setSelectedOptions(new Array(cfg.word_count).fill(null));
+            setTestConfig(cfg);
+
+            if (cfg.configSet) {
+                setStatus("yet_to_start");
+                setSelectedOptions(new Array(cfg.word_count).fill(null));
+            }
         }
-    }, []);
+    }, [location.state]); // Depend on location.state
 
 
     // fetching question data
     useEffect(() => {
-        dispatch(faceMCQDataStart());
-        axiosInstance.get(`/apis/vocab/get_N_MCQs/?N=${testConfig.word_count}&from_recent_only=${testConfig.from_recent_only}&to_from=${testConfig.to_from}`)
-            .then(res => res.data)
-            .then(data => {
-                setError("");
-                setQuestionsData(data);
-            })
-            .catch(err => {
-                setError(err.response.data.detail);
-            })
-            .finally(() => {
-                dispatch(faceMCQDataSuccess());
-            });
-    }, [testConfig.configSet]);
+        // Only fetch if config is set and word_count is positive
+        if (testConfig.configSet && testConfig.word_count > 0) {
+            dispatch(faceMCQDataStart());
+            axiosInstance.get(`/apis/vocab/get_N_MCQs/?N=${testConfig.word_count}&from_recent_only=${testConfig.from_recent_only}&to_from=${testConfig.to_from}`)
+                .then(res => res.data)
+                .then(data => {
+                    setError("");
+                    setQuestionsData(data);
+                })
+                .catch(err => {
+                    setError(err.response?.data?.detail || "Failed to fetch questions");
+                })
+                .finally(() => {
+                    dispatch(faceMCQDataSuccess());
+                });
+        } else if (testConfig.configSet && testConfig.word_count === 0) {
+            // Handle case where config is set but word_count is 0 (e.g. from direct navigation or bad state)
+             setError("Word count is zero. Please configure the test again.");
+             setQuestionsData([]); // Ensure no stale questions
+        }
+    }, [testConfig.configSet, testConfig.word_count, testConfig.from_recent_only, testConfig.to_from, dispatch]);
 
 
 
     // setting the test duration
     useEffect(() => {
-        // setting the duration
         setSecondsRemaining(testConfig.duration * 60);
-    }, [testConfig]);
+    }, [testConfig.duration]);
 
 
-    // timer handler
-    useEffect(() => {
-        if (status === "started") {
-            const intervalId = setInterval(() => {
-                setSecondsRemaining(secondsRemaining => {
-                    if (secondsRemaining === 0) {
-                        clearInterval(intervalId);
-                        testSubmitHandler();
-                    }
-                    return secondsRemaining - 1;
-                });
-            }, 1000);
-
-            return () => clearTimeout(intervalId);
-        }
-    }, [status]);
-
-
-    // test submit handler
-    const testSubmitHandler = () => {
+    // test submit handler, memoized with useCallback
+    const testSubmitHandler = useCallback(() => {
         setStatus("ended");
 
         // calculating result
@@ -172,7 +165,27 @@ const TakeTest = () => {
 
         setResultState(result);
         setShowResultModal(true);
-    }
+    }, [selectedOptions, questionsData, testConfig.word_count, testConfig.duration, secondsRemaining]);
+
+
+    // timer handler - now includes testSubmitHandler in dependencies
+    useEffect(() => {
+        if (status === "started") {
+            const intervalId = setInterval(() => {
+                setSecondsRemaining(currentSeconds => {
+                    if (currentSeconds === 0) {
+                        clearInterval(intervalId);
+                        testSubmitHandler();
+                        return 0; // Ensure it stays 0
+                    }
+                    return currentSeconds - 1;
+                });
+            }, 1000);
+
+            return () => clearInterval(intervalId);
+        }
+    }, [status, testSubmitHandler]);
+
 
     // take test config handler
     const configHandler = (config: TestConfigType) => {
@@ -188,7 +201,7 @@ const TakeTest = () => {
         setShowResultModal(false); // Hide result modal
     }
 
-    }
+    // Removed extra closing brace that was here
 
     if (!testConfig.configSet) {
         return (
@@ -239,7 +252,7 @@ const TakeTest = () => {
                                 key={idx}
                                 data={data}
                                 index={idx}
-                                total={questionsData.length}
+                                // total prop removed from MCQSingle
                                 showResult={status === "ended"}
                                 setSelectedOptions={setSelectedOptions}
                                 disabled={status === "ended"}

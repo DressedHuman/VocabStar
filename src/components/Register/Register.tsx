@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import CardStructure from "../CardComponents/CardStructure";
+// import CardStructure from "../CardComponents/CardStructure"; // Removed
 import Button from "../FormComponents/Button";
 import InputField from "../FormComponents/InputField";
-import CardTitle from "../CardComponents/CardTitle";
+// import CardTitle from "../CardComponents/CardTitle"; // Removed
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";

@@ -47,7 +47,7 @@ const Home = () => {
                 <TakeTestConfigForm configHandler={(config) => nav("/take_test", { state: config })} autoFocus={false} />
                 {/* Set autoFocus to false as it's not the primary action on this page */}
             </section>
-        </div>
+        </PageContainer>
     );
 };
 

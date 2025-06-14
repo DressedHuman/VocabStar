@@ -20,9 +20,9 @@ const ErrorPage = () => {
                     Sorry, we couldn't find the page you're looking for. It might have been moved, deleted, or maybe you just mistyped the URL.
                 </p>
                 <Button label="Go to Homepage" variant="primary" onClickHandler={() => nav("/")} additional_classes="mt-4" />
-            </main>
-            <Footer /> {/* Removed z-[10] unless specifically needed for stacking issue not visible here */}
-        </div>
+            </CenteredContent>
+            <Footer />
+        </PageContainer> // Correctly close PageContainer, CenteredContent is self-contained now
     );
 };
 

@@ -25,7 +25,7 @@ const Root = () => {
         else {
             localStorage.removeItem("token");
         }
-    }, []);
+    }, [isAuthenticated, dispatch]); // Added dependencies
 
     return (
         // Using PageContainer for consistent page structure and background
@@ -47,7 +47,7 @@ const Root = () => {
                 pauseOnFocusLoss={false}
                 pauseOnHover
             />
-        </div>
+        </PageContainer>
     );
 };
 
