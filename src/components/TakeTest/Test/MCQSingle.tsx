@@ -10,10 +10,11 @@ interface Props {
     total: number;
     showResult: boolean;
     setSelectedOptions: (updater: (selOptions: SelectedOptionType[]) => SelectedOptionType[]) => void;
+    disabled?: boolean; // Added disabled prop from TakeTest.tsx
 };
 
-const MCQSingle = ({ data, index, total, showResult, setSelectedOptions }: Props) => {
-    const [selectedOption, setSelectedOption] = useState<OptionType>();
+const MCQSingle = ({ data, index, total, showResult, setSelectedOptions, disabled }: Props) => {
+    const [selectedOption, setSelectedOption] = useState<OptionType | undefined>(undefined); // Ensure type consistency
 
     // check handler
     const checkHandler = (option: OptionType) => {
@@ -24,27 +25,41 @@ const MCQSingle = ({ data, index, total, showResult, setSelectedOptions }: Props
         })
     }
 
+    let borderClass = "";
+    if (showResult) {
+        if (selectedOption) {
+            if (selectedOption.id === data.correct_answer.id) {
+                borderClass = "border-2 border-success"; // Green border for correct
+            } else {
+                borderClass = "border-2 border-error"; // Red border for incorrect
+            }
+        } else {
+            // Optionally, a different border for not attempted but shown result
+            borderClass = "border-2 border-neutral-300"; // Grey for not attempted
+        }
+    }
+
     return (
-        <CardStructure additional_classes={showResult ? (selectedOption?.id===data.correct_answer.id ? "border-4 !border-[green]" : (selectedOption ? "border-4 !border-[red]" : "")) : ""}>
-            <CardTitle title={`${index+1}/${total}: ${data.question}`} size="text-base lg:text-lg" />
+        <CardStructure additional_classes={`transition-all duration-300 ${borderClass}`}>
+            <CardTitle
+                title={`${index + 1}. ${data.question}`} // Standard numbering, removed total for cleaner look per question
+                additional_classes="text-xl text-left mb-4" // Adjusted size and alignment
+            />
 
             {/* Options */}
-            <div className="grid grid-cols-1 md:grid-cols-7 lg:grid-cols-5">
-                <span className="hidden md:block"></span>
-                <div className="md:col-span-5 lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-5">
-                    {
-                        data.options.map((option, idx) => <Option
-                            key={idx}
-                            optionValue={option}
-                            index={idx}
-                            correct_answer={showResult ? data.correct_answer : null}
-                            checked={selectedOption === option}
-                            checkHandler={checkHandler}
-                            showResult={showResult}
-                        />)
-                    }
-                </div>
-                <span className="hidden md:block"></span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-4">
+                {data.options.map((option, optIdx) => (
+                    <Option
+                        key={optIdx} // Use option.id if available and unique, otherwise optIdx
+                        optionValue={option}
+                        index={optIdx} // This index is for A, B, C, D labeling
+                        correct_answer={showResult ? data.correct_answer : null}
+                        checked={selectedOption?.id === option.id}
+                        checkHandler={disabled ? () => {} : checkHandler} // Disable handler if test ended
+                        showResult={showResult}
+                        disabled={disabled} // Pass disabled state to Option
+                    />
+                ))}
             </div>
         </CardStructure>
     );

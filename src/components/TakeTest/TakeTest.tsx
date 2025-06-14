@@ -12,6 +12,8 @@ import { faceMCQDataStart, faceMCQDataSuccess } from "../../features/test/testSl
 import { RootState } from "../../app/store";
 import Loader from "../Loader/Loader";
 import ResultModal from "./Result/ResultModal";
+import PageContainer from "../UI/PageContainer"; // Import reusable PageContainer
+import CenteredContent from "../UI/CenteredContent"; // Import reusable CenteredContent
 
 export interface OptionType {
     id: number,
@@ -182,74 +184,92 @@ const TakeTest = () => {
     // take another test onClick handler
     const takeAnotherTestHandler = () => {
         setTestConfig(initialTestConfig);
+        setStatus("not_yet_started"); // Reset status to allow re-config
+        setShowResultModal(false); // Hide result modal
+    }
+
     }
 
     if (!testConfig.configSet) {
         return (
-            <div className="grid gap-3 md:gap-5 lg:gap-7 row-auto">
-                <CardStructure additional_classes="border-none flex justify-center items-center">
-                    {/* loader component */}
-                    {
-                        isLoading && <Loader />
-                    }
-                    <TakeTestConfigForm configHandler={configHandler} focus />
-                </CardStructure>
-            </div>
+            <PageContainer useNeutralBackground> {/* Added useNeutralBackground for consistency */}
+                {isLoading && <Loader />}
+                <TakeTestConfigForm configHandler={configHandler} autoFocus />
+            </PageContainer>
         )
     }
 
-
     return (
-        <CardStructure additional_classes="border-none">
-            {/* loader component */}
-            {
-                isLoading && <Loader />
-            }
+        <PageContainer useNeutralBackground> {/* Added useNeutralBackground */}
+            {isLoading && <Loader />}
 
-            {/* result modal */}
-            <ResultModal openModal={showResultModal} setOpenModal={setShowResultModal} resultState={resultState} />
+            <ResultModal openModal={showResultModal} setOpenModal={setShowResultModal} resultState={resultState} takeAnotherTestHandler={takeAnotherTestHandler} />
 
+            {error && (
+                <CenteredContent textAlign="text-center"> {/* Ensure text-center is applied */}
+                    <CardStructure>
+                        <CardTitle title="Error" />
+                        <p className="font-sans text-error text-base mb-4">{error}</p>
+                        <Button label="Go Home" variant="secondary" onClickHandler={() => nav("/")} />
+                    </CardStructure>
+                </CenteredContent>
+            )}
 
-            {
-                // any error message here
-                error && <div className="flex flex-col justify-center items-center gap-2">
-                    <CardTitle title={error} />
-                    <Button label="Go Home" onClickHandler={() => nav("/")} />
-                </div>
+            {!error && status === "yet_to_start" && (
+                <CenteredContent textAlign="text-center"> {/* Ensure text-center is applied */}
+                     <CardStructure>
+                        <CardTitle title="Are You Ready?" additional_classes="text-2xl" />
+                        <p className="text-neutral-400 font-sans mb-6">
+                            You are about to start a test with {testConfig.word_count} questions and a duration of {testConfig.duration} minutes.
+                        </p>
+                        <Button label="Start Test" variant="primary" onClickHandler={() => setStatus("started")} additional_classes="w-full sm:w-auto"/>
+                    </CardStructure>
+                </CenteredContent>
+            )}
 
-                ||
+            {!error && (status === "started" || status === "ended") && questionsData.length > 0 && (
+                // Using CenteredContent with a wider maxWidth for the test questions area
+                <CenteredContent maxWidth="max-w-3xl">
+                    {status === "started" && <Timer totalSeconds={secondsRemaining} label="Time Left" sticky />}
 
-                // ready message with start button
-                status === "yet_to_start" && <div className="flex flex-col justify-center items-center gap-2">
-                    <CardTitle title="Are You Ready To Take The Challenge?" size="text-lg lg:text-xl" />
-                    <Button label="Start" onClickHandler={() => setStatus("started")} />
-                </div>
-
-                ||
-
-                // test started with given MCQs
-                <div className="flex flex-col justify-center items-center gap-7">
-                    <CardTitle title="Test Your Memory" />
-                    {
-                        status === "started" && <Timer totalSeconds={secondsRemaining} label="Time Left" sticky />
-                    }
-                    <div className="flex flex-col gap-3 md:gap-5 lg:gap-7">
-                        {
-                            questionsData.map((data, idx) => <MCQSingle key={idx} data={data} index={idx} total={questionsData.length} showResult={status === "ended"} setSelectedOptions={setSelectedOptions} />)
-                        }
+                    <CardTitle title="Test Your Knowledge" additional_classes="my-6 text-center" /> {/* text-center from CenteredContent might be enough */}
+                    <div className="flex flex-col gap-4 md:gap-6">
+                        {questionsData.map((data, idx) => (
+                            <MCQSingle
+                                key={idx}
+                                data={data}
+                                index={idx}
+                                total={questionsData.length}
+                                showResult={status === "ended"}
+                                setSelectedOptions={setSelectedOptions}
+                                disabled={status === "ended"}
+                            />
+                        ))}
                     </div>
-                    {
-                        status === "started" && <Button label="Submit" onClickHandler={testSubmitHandler} />
-                    }
-                    {
-                        status === "ended" && <div className="flex flex-col md:flex-row justify-center items-center gap-3">
-                            <Button label="Show Result" onClickHandler={() => setShowResultModal(true)} />
-                            <Button label="Take Another Test" onClickHandler={takeAnotherTestHandler} />
+
+                    {status === "started" && (
+                        <div className="mt-8 text-center">
+                            <Button label="Submit Test" variant="primary" onClickHandler={testSubmitHandler} additional_classes="w-full sm:w-auto" />
                         </div>
-                    }
-                </div>
-            }
-        </CardStructure>
+                    )}
+
+                    {status === "ended" && (
+                        <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+                            <Button label="Show Detailed Result" variant="primary" onClickHandler={() => setShowResultModal(true)} />
+                            <Button label="Take Another Test" variant="secondary" onClickHandler={takeAnotherTestHandler} />
+                        </div>
+                    )}
+                </CenteredContent>
+            )}
+             {!error && (status === "started" || status === "ended") && questionsData.length === 0 && !isLoading && (
+                <CenteredContent textAlign="text-center"> {/* Ensure text-center is applied */}
+                    <CardStructure>
+                        <CardTitle title="Loading Questions..." />
+                        <p className="font-sans text-neutral-400">Please wait while the questions are being prepared.</p>
+                    </CardStructure>
+                </CenteredContent>
+            )}
+        </PageContainer>
     );
 };
 

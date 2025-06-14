@@ -42,40 +42,62 @@ const Login: React.FC = () => {
     })
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-7">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-100 py-12 px-4 sm:px-6 lg:px-8">
             {/* loader component */}
             {
                 isLoading && <Loader />
             }
 
-            {/* login card */}
-            <CardStructure additional_classes="md:col-span-3 md:border-y-0 md:border-l-0 md:rounded-none">
-                {/* Card Title */}
-                <CardTitle title="Login Here" />
+            {/* Login Card Container */}
+            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+                {/* Card Title - Assuming CardTitle component will adapt or be styled appropriately.
+                    Ideally, CardTitle itself would use font-heading, text-primary etc.
+                    For now, ensuring the text here is clear. */}
+                <h2 className="font-heading text-2xl text-primary text-center mb-6">Login Here</h2>
 
                 {/* Login Form */}
                 <form
                     onSubmit={loginHandler}
-                    className="flex flex-col justify-between items-center gap-4"
+                    className="flex flex-col gap-6" // Updated gap
                 >
                     {/* Email Field */}
-                    <InputField type="email" id="email" name="email" label="Your Email" lang="en" placeholder="type email" required focus />
+                    <InputField
+                        type="email"
+                        id="email"
+                        name="email"
+                        label="Your Email"
+                        placeholder="you@example.com"
+                        required
+                        autoFocus // Renamed from focus, removed lang
+                    />
 
                     {/* Password Field */}
-                    <InputField type="password" id="password" name="password" label="Password" placeholder="type password" required />
+                    <InputField
+                        type="password"
+                        id="password"
+                        name="password"
+                        label="Password"
+                        placeholder="••••••••"
+                        required
+                    />
 
                     {/* submission error */}
                     {loginError && <FormError errorText={loginError} />}
 
                     {/* Login Button */}
-                    <Button label="Login" button_type="submit" />
+                    <Button label="Login" button_type="submit" variant="primary" additional_classes="w-full" />
                 </form>
-            </CardStructure>
+            </div>
 
-            {/* right sidebar */}
-            <div className="md:col-span-2 flex flex-col justify-center items-center gap-1 md:gap-2 lg:gap-3">
-                <h3 className="text-center text-xl text-app_name font-ubuntu">Don't have an account?</h3>
-                <Button label="Register Here" onClickHandler={() => nav("/register")} />
+            {/* Registration Prompt */}
+            <div className="mt-6 text-center">
+                <p className="text-sm text-neutral-400">Don't have an account?</p>
+                <Button
+                    label="Register Here"
+                    variant="secondary" // Using secondary style for this button
+                    onClickHandler={() => nav("/register")}
+                    additional_classes="mt-2"
+                />
             </div>
         </div>
     );

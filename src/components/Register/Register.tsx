@@ -52,52 +52,57 @@ const Register: React.FC = () => {
     })
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-5">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-neutral-100 py-12 px-4 sm:px-6 lg:px-8">
             {/* loader component */}
             {
                 isLoading && <Loader />
             }
 
-            {/* registration card */}
-            <CardStructure additional_classes="md:col-span-3 md:border-y-0 md:border-l-0 md:rounded-none">
+            {/* Registration Card Container */}
+            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg"> {/* max-w-lg for more fields */}
                 {/* Card Title */}
-                <CardTitle title="Register Here" />
+                <h2 className="font-heading text-2xl text-primary text-center mb-6">Create an Account</h2>
 
                 {/* Registration Form */}
                 <form
                     onSubmit={registerHandler}
-                    className="flex flex-col justify-center items-center gap-4"
+                    className="flex flex-col gap-4" // items-stretch is default for block elements like InputField's div
                 >
                     {/* First Name Field */}
-                    <InputField id="first_name" name="first_name" label="Your First Name" placeholder="type first name" required focus />
+                    <InputField id="first_name" name="first_name" label="First Name" placeholder="John" required autoFocus />
 
                     {/* Last Name Field */}
-                    <InputField id="last_name" name="last_name" label="Your Last Name" placeholder="type last name" required />
+                    <InputField id="last_name" name="last_name" label="Last Name" placeholder="Doe" required />
                     
                     {/* University Field */}
-                    <InputField id="university" name="university" label="Your University" placeholder="type university name" required />
+                    <InputField id="university" name="university" label="University" placeholder="Example University" required />
 
                     {/* Phone Number Field */}
-                    <InputPhoneNumber id="phone_num" name="phone_num" label="Your Phone Number" placeholder="+880 1345-444554" required />
+                    <InputPhoneNumber id="phone_num" name="phone_num" label="Phone Number" placeholder="+880 1XXXXXXXXX" required />
 
                     {/* Email Field */}
-                    <InputField type="email" id="email" name="email" label="Your Email" placeholder="type email" required />
+                    <InputField type="email" id="email" name="email" label="Email Address" placeholder="you@example.com" required />
 
                     {/* Password Field */}
-                    <InputField type="password" id="password" name="password" label="Password" placeholder="type password" required />
+                    <InputField type="password" id="password" name="password" label="Password" placeholder="••••••••" required />
 
                     {/* Submission Error */}
                     {registerError && <FormError errorText={registerError} />}
 
-                    {/* Login Button */}
-                    <Button label="Register" button_type="submit" />
+                    {/* Register Button */}
+                    <Button label="Create Account" button_type="submit" variant="primary" additional_classes="w-full mt-2" />
                 </form>
-            </CardStructure>
+            </div>
 
-            {/* Right Sidebar */}
-            <div className="md:col-span-2 flex flex-col justify-center items-center gap-1 md:gap-2 lg:gap-3">
-                <h3 className="text-center text-xl text-app_name font-ubuntu">Already have an account?</h3>
-                <Button label="Login Here" onClickHandler={() => nav("/login")} />
+            {/* Login Prompt */}
+            <div className="mt-6 text-center">
+                <p className="text-sm text-neutral-400">Already have an account?</p>
+                <Button
+                    label="Login Here"
+                    variant="secondary"
+                    onClickHandler={() => nav("/login")}
+                    additional_classes="mt-2"
+                />
             </div>
         </div>
     );

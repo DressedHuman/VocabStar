@@ -3,18 +3,25 @@ import CardTitle from "../CardComponents/CardTitle";
 import Button from "../FormComponents/Button";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
+import PageContainer from "../UI/PageContainer"; // Import PageContainer
+import CenteredContent from "../UI/CenteredContent"; // Import CenteredContent
 
 const ErrorPage = () => {
     const nav = useNavigate();
 
     return (
-        <div className="min-w-[100vw] min-h-[100vh] px-5 md:px-7 lg:px-12 py-2 md:py-3 space-y-12 flex flex-col justify-between items-center">
+        <PageContainer useNeutralBackground additional_classes="flex flex-col items-stretch">
             <Header />
-            <div className="flex flex-col justify-center items-center gap-4 grow">
-                <CardTitle title="404 Not Found" />
-                <Button label="Go Home" onClickHandler={() => nav("/")} />
-            </div>
-            <Footer additional_classes="z-[10]" />
+            {/* Used CenteredContent for the main error message area */}
+            <CenteredContent additional_classes="flex flex-col justify-center items-center gap-6 grow py-12" textAlign="text-center">
+                <h1 className="font-heading text-6xl md:text-8xl text-primary">404</h1>
+                <CardTitle title="Page Not Found" additional_classes="text-2xl md:text-3xl" />
+                <p className="font-sans text-neutral-400 text-base md:text-lg max-w-md">
+                    Sorry, we couldn't find the page you're looking for. It might have been moved, deleted, or maybe you just mistyped the URL.
+                </p>
+                <Button label="Go to Homepage" variant="primary" onClickHandler={() => nav("/")} additional_classes="mt-4" />
+            </main>
+            <Footer /> {/* Removed z-[10] unless specifically needed for stacking issue not visible here */}
         </div>
     );
 };

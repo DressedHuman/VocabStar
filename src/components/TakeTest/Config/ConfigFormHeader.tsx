@@ -8,12 +8,11 @@ export interface LangType {
 interface Props {
     fromLang: LangType;
     toLang: LangType;
-    color?: string;
-    size?: "text-2xl lg:text-3xl" | "text-xl lg:text-2xl" | "text-lg lg:text-xl" | "text-base lg:text-lg" | "text-sm lg:text-base";
     swapper: (toFromLangs: ToFromLangs) => void;
+    additional_classes?: string;
 };
 
-const ConfigFormHeader = ({ fromLang, toLang, color = "text-card_title", size = "text-xl lg:text-2xl", swapper }: Props) => {
+const ConfigFormHeader = ({ fromLang, toLang, swapper, additional_classes }: Props) => {
     const swapHandler = () => {
         const newLangsState = {
             from: toLang,
@@ -29,19 +28,24 @@ const ConfigFormHeader = ({ fromLang, toLang, color = "text-card_title", size = 
         }
     }
 
+    // Default styles for the header, mb-6 for spacing similar to CardTitle
+    const defaultBaseStyles = "flex flex-nowrap justify-center items-center gap-3 mb-6";
+    const langTextStyles = "font-heading text-primary text-xl text-center";
+    const swapIconStyles = "font-semibold text-secondary text-xl text-center cursor-pointer focus:outline-none focus:ring-1 focus:ring-secondary rounded";
+
     return (
-        <div
-            className="flex flex-nowrap justify-center items-center gap-3"
-        >
+        <div className={`${defaultBaseStyles} ${additional_classes || ""}`}>
             {/* from language */}
-            <h2 className={`${size} font-semibold ${color} text-center`}>{fromLang.name}</h2>
+            <h2 className={langTextStyles}>{fromLang.name}</h2>
             <span
-                className={`${size} font-semibold text-[green] text-center cursor-pointer`}
+                className={swapIconStyles}
                 tabIndex={0}
                 onKeyDown={onkeyDownHandler}
                 onClick={swapHandler}
+                role="button" // Accessibility: role button
+                aria-label={`Swap languages, current is ${fromLang.name} to ${toLang.name}`} // Accessibility: aria-label
             >⇄</span>
-            <h2 className={`${size} font-semibold ${color} text-center`}>{toLang.name}</h2>
+            <h2 className={langTextStyles}>{toLang.name}</h2>
         </div>
     );
 };

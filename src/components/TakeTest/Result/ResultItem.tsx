@@ -5,12 +5,27 @@ interface Props {
 };
 
 const ResultItem = ({ label, count, type }: Props) => {
+    let textColorClass = "";
+    switch (type) {
+        case "right":
+            textColorClass = "text-success";
+            break;
+        case "wrong":
+            textColorClass = "text-error";
+            break;
+        case "not_attempted":
+            textColorClass = "text-neutral-400";
+            break;
+        default:
+            textColorClass = "text-primary"; // Fallback, though type is constrained
+    }
+
     return (
-        <div className={`flex flex-col justify-center items-center gap-1 ${type === "right" ? "text-[green]" :
-                type === "wrong" ? "text-[#ff3543]" : "text-[#222333]"
-            }`}>
-            <p className="text-base md:text-lg order-2 font-mono text-center">{label}</p>
-            <span className="text-2xl">{count}</span>
+        <div className={`flex flex-col justify-center items-center gap-1 p-3 rounded-md bg-neutral-100 ${textColorClass}`}>
+            {/* Label - Placed below the count using order-2 */}
+            <p className="text-sm font-sans order-2 text-center">{label}</p>
+            {/* Count - Larger and bold */}
+            <span className="text-xl font-semibold">{count}</span>
         </div>
     );
 };

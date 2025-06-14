@@ -10,9 +10,16 @@ interface PageLinkProps {
 };
 
 const PageLink = ({ name, path }: PageLinkProps) => {
+    // Updated styles for PageLink using new theme
     return <NavLink
         to={path}
-        className={({ isActive, isPending }) => isActive ? "text-blue-500 md:p-0 dark:border-gray-700 block py-1 px-1 rounded" : isPending ? "" : "text-gray-900 dark:text-white hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-500 md:p-0 md:dark:hover:text-blue-300 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 block py-1 px-1 rounded"}
+        className={({ isActive }) =>
+            `block py-2 px-3 rounded md:p-0 ${
+                isActive
+                    ? "text-secondary"
+                    : "text-neutral-100 hover:text-secondary"
+            }`
+        }
     >
         {name}
     </NavLink>
@@ -45,26 +52,27 @@ const Header = () => {
     }
 
     return (
-        <nav className="w-full start-0 border-b border-gray-200 dark:border-gray-600">
+        <nav className="w-full start-0 bg-primary"> {/* Applied primary background, removed border */}
             {/* initial interface */}
-            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
+            <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4"> {/* Increased padding */}
                 {/* left section */}
                 <Link
                     to={"/"}
                     className='flex flex-col justify-center items-start gap-1 md:gap-2'
                 >
-                    <h2 className="text-center text-xl md:text-2xl lg:text-3xl text-app_name font-ubuntu">VocabStar</h2>
-                    <p className="text-sm md:text-base lg:text-lg text-border_color text-center font-mono">Learn to Never Forget!</p>
+                    {/* Updated text color and font for site title and tagline */}
+                    <h2 className="text-center text-xl md:text-2xl lg:text-3xl text-neutral-100 font-heading">VocabStar</h2>
+                    <p className="text-sm md:text-base lg:text-lg text-neutral-200 text-center font-sans">Learn to Never Forget!</p>
                 </Link>
 
-                {/* right section */}
+                {/* right section - Hamburger Menu Button */}
                 <div className="flex md:hidden md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    {/* page links */}
                     <button
                         onClick={toggleOpenClose}
                         data-collapse-toggle="navbar-sticky"
                         type="button"
-                        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                        // Updated styles for hamburger menu button
+                        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-neutral-100 rounded-lg md:hidden hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-neutral-300"
                         aria-controls="navbar-sticky"
                         aria-expanded="false"
                     >
@@ -75,9 +83,10 @@ const Header = () => {
                     </button>
                 </div>
 
-                {/* middle section (for tablet or larger devices only) */}
+                {/* middle section (for tablet or larger devices only) - Desktop Navigation */}
                 <div className="w-full md:w-auto hidden md:flex items-center justify-between md:order-1" id="navbar-sticky">
-                    <ul className="flex flex-col justify-center items-center gap-1 p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:border-gray-700">
+                    {/* Updated styles for desktop navigation list */}
+                    <ul className="flex flex-col justify-center items-center gap-1 p-4 md:p-0 mt-4 font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0">
                         {
                             links.map((link, idx) => <li key={idx}>
                                 <PageLink name={link.name} path={link.path} />
@@ -87,9 +96,10 @@ const Header = () => {
                             isAuthenticated && <button
                                 onClick={() => {
                                     logoutUser(dispatch);
-                                    toggleOpenClose();
+                                    // toggleOpenClose(); // Removed toggleOpenClose as it's not relevant for desktop
                                 }}
-                                className='border border-border_color rounded-md text-white px-3 py-2 hover:bg-bg_color'
+                                // Updated styles for logout button
+                                className='border border-secondary rounded-md text-neutral-100 px-3 py-2 hover:bg-secondary hover:text-primary'
                             >
                                 Logout
                             </button>
@@ -99,31 +109,31 @@ const Header = () => {
             </div>
 
             {/* menu options (for mobile devices only) */}
-            <div className={`${isMobileMenuOpen ? "" : "hidden"} items-center justify-between w-full md:hidden`} id="navbar-sticky">
-                <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+            {/* Updated styles for mobile menu container and links */}
+            <div className={`${isMobileMenuOpen ? "block" : "hidden"} items-center justify-between w-full md:hidden bg-primary`} id="navbar-sticky">
+                <ul className="flex flex-col p-4 mt-4 font-medium">
                     {
                         links.map((link, idx) => <li
                             key={idx}
-                            onClick={toggleOpenClose}
+                            onClick={toggleOpenClose} // Keep toggle for closing menu on item click
                         >
-                            <NavLink
-                                to={link.path}
-                                className={({ isActive, isPending }) => isActive ? "block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500" : isPending ? "" : "block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"}
-                            >
-                                {link.name}
-                            </NavLink>
+                            {/* Re-uses PageLink component for consistent styling in mobile */}
+                            <PageLink name={link.name} path={link.path} />
                         </li>)
                     }
                     {
-                        isAuthenticated && <button
-                            onClick={() => {
-                                logoutUser(dispatch);
-                                toggleOpenClose();
-                            }}
-                            className="px-3 py-2 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                        >
-                            Logout
-                        </button>
+                        isAuthenticated && <li onClick={toggleOpenClose}> {/* Added li wrapper and toggle for mobile logout */}
+                            <button
+                                onClick={() => {
+                                    logoutUser(dispatch);
+                                    // toggleOpenClose(); // Already handled by li
+                                }}
+                                // Consistent styling with mobile PageLinks, but full width and explicit button look
+                                className="block w-full text-left py-2 px-3 rounded text-neutral-100 hover:text-secondary"
+                            >
+                                Logout
+                            </button>
+                        </li>
                     }
                 </ul>
             </div>

@@ -28,41 +28,48 @@ const ShowWord = ({ word, deleteVocab }: Props) => {
         window.responsiveVoice.speak(meaning,"Bangla Bangladesh Male", {rate: 1.0, pitch: 1.12});
     }
 
+import CardStructure from "../CardComponents/CardStructure"; // Import CardStructure
+
     return (
-        <div
-            className="w-full relative"
-        >
-            <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-1 md:gap-3 items-center text-lg lg:text-xl border-2 border-border_color rounded-md px-4 py-2 divide-y-[1px] md:divide-y-0 md:divide-x-[1px] divide-border_color capitalize">
-                <h2
-                    className="text-center cursor-pointer"
-                    onClick={handleWordClick}
-                >{word.word}</h2>
+        <CardStructure additional_classes="relative"> {/* Use CardStructure, add relative for absolute positioning of delete button */}
+            <div className="flex flex-col md:flex-row md:items-center md:gap-4">
+                {/* Word */}
+                <div className="md:w-1/3">
+                    <h2
+                        className="font-heading text-primary text-xl cursor-pointer capitalize text-center md:text-left mb-2 md:mb-0"
+                        onClick={handleWordClick}
+                    >
+                        {word.word}
+                    </h2>
+                </div>
 
                 {/* Meanings */}
-                <div className="col-span-2 text-center divide-y-0 md:divide-y-[1px] divide-border_color pt-2 md:p-0">
-                    {
-                        word.meanings.map(meaning => <p
+                <div className="md:w-2/3 md:border-l md:border-neutral-200 md:pl-4">
+                    {word.meanings.map((meaning, index) => (
+                        <p
                             key={meaning.id}
-                            className="font-hind_siliguri p-1 cursor-pointer"
+                            className={`font-hind_siliguri text-neutral-400 text-base py-1 cursor-pointer text-center md:text-left ${index < word.meanings.length - 1 ? 'mb-1' : ''}`}
                             onClick={() => handleMeaningClick(meaning.meaning)}
                         >
                             {meaning.meaning}
-                        </p>)
-                    }
+                        </p>
+                    ))}
                 </div>
             </div>
 
-            {/* delete button */}
+            {/* Delete Button - Positioned inside the card padding area */}
             <button
                 onClick={deleteVocab}
-                className="w-5 absolute top-0 right-0 translate-x-[50%] -translate-y-[50%] backdrop-blur-3xl hover:scale-125 duration-75"
+                title="Delete word" // Added title for accessibility
+                className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-neutral-100 hover:bg-error text-neutral-400 hover:text-white rounded-full transition-colors duration-150 ease-in-out"
             >
                 <img
                     src={DeleteIcon}
-                    className="w-full"
+                    alt="Delete" // Added alt text
+                    className="w-4 h-4" // Control icon size
                 />
             </button>
-        </div>
+        </CardStructure>
     );
 };
 

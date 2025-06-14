@@ -9,9 +9,10 @@ interface Props {
     openModal: boolean;
     setOpenModal: (state: boolean) => void;
     resultState: ResultStateType;
+    takeAnotherTestHandler: () => void; // Added prop from TakeTest.tsx
 }
 
-const ResultModal = ({ openModal, setOpenModal, resultState }: Props) => {
+const ResultModal = ({ openModal, setOpenModal, resultState, takeAnotherTestHandler }: Props) => {
     useEffect(() => {
         const body = document.body as HTMLBodyElement;
         if (openModal) {
@@ -24,42 +25,52 @@ const ResultModal = ({ openModal, setOpenModal, resultState }: Props) => {
         }
     });
 
+    // Time formatting utility
+    const formatTime = (totalSeconds: number) => {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes}m ${seconds}s`;
+    };
+
+    if (!openModal) return null; // Render nothing if modal is not open
+
     return (
-        <>
-            {/* instruction modal to add homework perfectly */}
-            {/* modal source: https://navigateui.com/components/modal */}
-            <div className="w-[100vw] mx-auto flex items-center justify-center font-open-sans">
-                {/* clicking outside the modal message won't close the modal */}
-                {/* div with full window overlay */}
-                <div className={`fixed flex justify-center items-center z-[100] ${openModal ? 'visible opacity-1' : 'invisible opacity-0'} inset-0 w-full h-full backdrop-blur-sm bg-none duration-100`}>
-                    {/* stopped propagation for event bubble for the main modal content */}
-                    {/* main modal here */}
-                    <div onClick={(e_) => e_.stopPropagation()} className={`absolute w-[87vw] md:w-[500px] lg:w-[750px] bg-[#aaaaff] drop-shadow-2xl rounded-lg ${openModal ? 'scale-100 opacity-1 duration-300 translate-y-0' : 'scale-0 -translate-y-20 opacity-0 duration-150'}`}>
-                        <div className="p-5 md:p-7 relative">
-                            {/* modal message here */}
-                            <div className="max-h-[75vh] overflow-auto space-y-3 md:space-y-4 lg:space-y-5 flex flex-col justify-center items-center gap-5">
-                                {/* score out of total marks */}
-                                <CardTitle title={`Score: ${resultState.gained_marks}/${resultState.total_marks}`} size="text-2xl lg:text-3xl" color="text-bg_color" />
-                                {/* <Timer totalSeconds={resultState.time_taken} /> */}
+        // Modal Overlay
+        <div
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 transition-opacity duration-150"
+            onClick={() => setOpenModal(false)} // Close on overlay click
+        >
+            {/* Modal Content */}
+            <div
+                onClick={(e) => e.stopPropagation()}
+                className={`bg-white w-full max-w-lg rounded-lg shadow-xl p-6 transform transition-all duration-300 ${openModal ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 -translate-y-10'}`}
+            >
+                <div className="max-h-[85vh] overflow-y-auto">
+                    <CardTitle title="Test Result" additional_classes="text-center mb-6" />
 
-                                <div className="flex flex-wrap justify-center items-center gap-3 md:gap-5 font-semibold font-hind_siliguri">
-                                    {/* right answers */}
-                                    <ResultItem label="Correct Answer(s)" count={resultState.correct_answers} type="right" />
-                                    {/* wrong answers */}
-                                    <ResultItem label="Wrong Answer(s)" count={resultState.wrong_answers} type="wrong" />
-                                    {/* not attempted */}
-                                    <ResultItem label="Not Attempted" count={resultState.not_attempted} type="not_attempted" />
-                                </div>
+                    <div className="text-center mb-6">
+                        <p className="font-sans text-neutral-400 text-lg">Total Score</p>
+                        <p className="font-heading text-primary text-4xl my-1">
+                            {resultState.gained_marks} <span className="text-neutral-300 text-2xl">/ {resultState.total_marks}</span>
+                        </p>
+                        <p className="font-sans text-neutral-400 text-sm">
+                            Time Taken: {formatTime(resultState.time_taken)}
+                        </p>
+                    </div>
 
-                                {/* review answers button */}
-                                <Button label="Review Answers" onClickHandler={() => setOpenModal(false)} font_color="text-bg_color" />
-                            </div>
-                        </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 text-center">
+                        <ResultItem label="Correct" count={resultState.correct_answers} type="right" />
+                        <ResultItem label="Wrong" count={resultState.wrong_answers} type="wrong" />
+                        <ResultItem label="Not Attempted" count={resultState.not_attempted} type="not_attempted" />
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-neutral-200">
+                        <Button label="Review Answers" variant="secondary" onClickHandler={() => setOpenModal(false)} />
+                        <Button label="Take Another Test" variant="primary" onClickHandler={takeAnotherTestHandler} />
                     </div>
                 </div>
             </div>
-            {/* instruction modal ended */}
-        </>
+        </div>
     );
 };
 

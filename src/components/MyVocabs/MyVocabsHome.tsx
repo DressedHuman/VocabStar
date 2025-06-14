@@ -5,13 +5,14 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import MyVocabs from "./MyVocabs";
 import Button from "../FormComponents/Button";
 
-// icons
-import leftIcon from './icons/left.svg';
-import rightIcon from './icons/right.svg';
 import { useDispatch, useSelector } from "react-redux";
 import { deleteVocabFailure, deleteVocabStart, deleteVocabSuccess, getMyWordsFailure, getMyWordsStart, getMyWordsSuccess } from "../../features/vocab/vocabSlice";
 import { RootState } from "../../app/store";
 import Loader from "../Loader/Loader";
+import PageContainer from "../UI/PageContainer"; // Import PageContainer
+import CenteredContent from "../UI/CenteredContent"; // Import CenteredContent
+import CardStructure from "../CardComponents/CardStructure"; // To wrap content sections
+import CardTitle from "../CardComponents/CardTitle"; // For section titles if needed
 
 export interface MeaningType {
     id: number;
@@ -118,80 +119,69 @@ const MyVocabsHome = () => {
         faceVocabs(page);
     }, [searchParams.get("page"), vocabsCount])
 
+    // Determine if "Previous" and "Next" buttons should be disabled
+    const isPrevDisabled = showingResultsFromTo.from <= 1; // Assuming 'from' is 1-indexed for the first item
+    // If using 0-indexed 'from', it would be showingResultsFromTo.from === 0 or similar
+    // For now, assuming 10 items per page, so if 'from' is 1, it's the first page.
+    // A more robust way would be to get current page number and total pages from backend.
+    const isNextDisabled = showingResultsFromTo.to >= vocabsCount;
+
+
     return (
-        <>
-            {/* if the words are still loading, display the loader */}
-            {
-                isWordsLoading && <Loader />
-            }
+        <PageContainer useNeutralBackground>
+            {isWordsLoading && <Loader />}
 
-            {/* display errors if there is any */}
-            {
-                vocabsError && <div className="flex flex-col justify-center items-center gap-3">
-                    <p className="text-[gold] text-xl md:text-2xl font-mono">{vocabsError}</p>
-                    <Button label="Go Home" onClickHandler={() => nav("/")} />
-                </div>
-            }
+            {vocabsError && !isWordsLoading && (
+                <CenteredContent textAlign="text-center">
+                    <CardStructure>
+                        <CardTitle title="Error Fetching Vocabularies" />
+                        <p className="font-sans text-error text-base mb-4">{vocabsError}</p>
+                        <Button label="Go Home" variant="secondary" onClickHandler={() => nav("/")} />
+                    </CardStructure>
+                </CenteredContent>
+            )}
 
-            {/* the words of the user after loading */}
-            {
-                vocabsCount > 0 && <div className="lg:grid lg:grid-cols-5">
-                    {/* previous page button for desktop mode */}
-                    <div className="hidden lg:flex lg:justify-center lg:items-center">
-                        {
-                            showingResultsFromTo.from > 10 && <button
-                                onClick={() => pageChange("prev")}
-                                className="text-white py-7 px-4 text-5xl hover:bg-bg_color"
-                            >
-                                <img
-                                    src={leftIcon}
-                                    className="w-7"
-                                />
-                            </button>
-                        }
-                    </div>
+            {!isWordsLoading && !vocabsError && vocabsCount > 0 && (
+                <CenteredContent maxWidth="max-w-4xl">
+                    <CardStructure>
+                        <h2 className="font-sans text-neutral-400 text-center text-base mb-6">
+                            Showing {showingResultsFromTo.from}-{showingResultsFromTo.to} of {vocabsCount} words
+                        </h2>
 
-                    {/* user vocabs list */}
-                    <div className="col-span-3 space-y-7">
-                        <h2 className="text-center text-white text-lg font-mono font-medium">Showing {showingResultsFromTo.from}-{showingResultsFromTo.to} of {vocabsCount}</h2>
-
-                        {/* my vocabs */}
                         <MyVocabs userVocabs={userVocabs} deleteVocabHandler={deleteVocab} />
 
-                        {/* prev and next buttons for mobile and tablet devices */}
-                        <div className="lg:hidden flex flex-col md:flex-row justify-around items-center gap-2">
-                            {
-                                showingResultsFromTo.from > 10 && 10 < vocabsCount && <Button
-                                    label="Prev"
+                        {(vocabsCount > 10) &&
+                            <div className="flex justify-between items-center mt-6 pt-6 border-t border-neutral-200">
+                                <Button
+                                    label="Previous"
+                                    variant="secondary"
                                     onClickHandler={() => pageChange("prev")}
+                                    disabled={isPrevDisabled}
                                 />
-                            }
-                            {
-                                showingResultsFromTo.to < vocabsCount && <Button
+                                <Button
                                     label="Next"
+                                    variant="secondary"
                                     onClickHandler={() => pageChange("next")}
+                                    disabled={isNextDisabled}
                                 />
-                            }
-                        </div>
-                    </div>
-
-                    {/* next page button for desktop mode */}
-                    <div className="hidden lg:flex lg:justify-center lg:items-center">
-                        {
-                            showingResultsFromTo.to < vocabsCount && <button
-                                onClick={() => pageChange("next")}
-                                className="text-white py-7 px-4 text-5xl hover:bg-bg_color"
-                            >
-                                <img
-                                    src={rightIcon}
-                                    className="w-7"
-                                />
-                            </button>
+                            </div>
                         }
-                    </div>
-                </div>
-            }
-        </>
+                    </CardStructure>
+                </CenteredContent>
+            )}
+
+            {!isWordsLoading && !vocabsError && vocabsCount === 0 && (
+                 <CenteredContent textAlign="text-center">
+                    <CardStructure>
+                        <CardTitle title="No Vocabularies Yet" />
+                        <p className="font-sans text-neutral-400 mb-6">
+                            You haven't added any words to your vocabulary list. Start by adding some new words!
+                        </p>
+                        <Button label="Add Vocab" variant="primary" onClickHandler={() => nav('/add_vocab')} />
+                    </CardStructure>
+                </CenteredContent>
+            )}
+        </PageContainer>
     );
 };
 

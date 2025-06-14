@@ -8,11 +8,10 @@ interface Props {
 
 const MyVocabs = ({ userVocabs, deleteVocabHandler }: Props) => {
     return (
-        <div>
-            <div className="flex flex-col justify-center items-center gap-3 lg:gap-5 text-[gold]">
-                {
-                    userVocabs.map(word => <ShowWord
-                        key={word.id}
+        <div className="flex flex-col items-stretch gap-4"> {/* items-stretch to make ShowWord take full width, consistent gap */}
+            {
+                userVocabs.map(word => <ShowWord
+                    key={word.id}
                         word={word}
                         deleteVocab={() => deleteVocabHandler(word.id)}
                     />)

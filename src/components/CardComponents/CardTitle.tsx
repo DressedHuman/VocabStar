@@ -1,12 +1,14 @@
 interface Props {
     title: string;
-    color?: string;
-    size?: "text-2xl lg:text-3xl" | "text-xl lg:text-2xl" | "text-lg lg:text-xl" | "text-base lg:text-lg" | "text-sm lg:text-base";
+    additional_classes?: string; // Added for flexibility
 };
 
-const CardTitle = ({ title, color="text-card_title", size="text-xl lg:text-2xl" }: Props) => {
+const CardTitle = ({ title, additional_classes }: Props) => {
+    // Default title styles aligned with the new design system
+    const defaultStyles = "font-heading text-primary text-2xl text-center mb-4";
+
     return (
-        <h2 className={`${size} font-semibold ${color} text-center`}>{title}</h2>
+        <h2 className={`${defaultStyles} ${additional_classes || ""}`}>{title}</h2>
     );
 };
 

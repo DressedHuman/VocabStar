@@ -8,9 +8,22 @@ const Timer = ({ totalSeconds, label, sticky }: Props) => {
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
 
+    const timerText = `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+
+    let containerClasses = "text-center"; // Default container styling
+    let textClasses = "font-sans text-base font-semibold text-secondary text-nowrap";
+
+    if (sticky) {
+        containerClasses = "sticky top-0 z-10 bg-white shadow-sm py-3 px-4 w-full text-center"; // Added more padding and w-full
+        textClasses = "font-sans text-lg font-semibold text-secondary text-nowrap"; // Larger text for sticky timer
+    }
+
     return (
-        <div>
-            <p className={`font-ubuntu text-lg text-card_title font-semibold text-nowrap ${sticky ? "sticky top-0 left-0 right-0" : ""}`}>{label ? `${label} - ` : ""}{`${minutes < 10 ? "0" : ""}${minutes}`} <span className="text-[green]">:</span> {`${seconds < 10 ? "0" : ""}${seconds}`}</p>
+        <div className={containerClasses}>
+            <p className={textClasses}>
+                {label && <span className="text-neutral-500">{label} - </span>}
+                {timerText}
+            </p>
         </div>
     );
 };

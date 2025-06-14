@@ -32,37 +32,40 @@ const Checkbox = ({ label, defaultChecked = false, size = 'medium', showCross = 
     }
 
     return (
-        <div className='flex justify-center items-center gap-1'>
-            <p className={`font-mono text-card_title
-                    ${size==="small" ? "text-base" :
-                        size==="medium" ? "text-[20px]" :
-                            size==="large" ? "text-[28px]" :
-                                ""
-                    }
-                `}>{label}: </p>
+        <div className={`flex items-center gap-2 ${disabled ? "cursor-not-allowed" : "cursor-pointer"}`} onClick={handleClick}>
             <div
-                onClick={handleClick}
-                onKeyDown={handleKeyDown}
+                role="checkbox"
+                aria-checked={checked}
                 tabIndex={disabled ? -1 : 0}
-                className={`aspect-square select-none ${disabled ? '' : 'hover:scale-150'} duration-75
-                ${size === 'small' ? 'w-4 border-[1.5px] p-[1px] rounded' :
-                        size === 'medium' ? 'w-5 border-[2px] p-[2px] rounded-md' :
-                            size === 'large' ? 'w-7 border-[2px] p-[1px] rounded-md' : 'w-5 border-[2px] p-[2px] rounded-md'}
-                ${disabled ? "border-[gray]" : "border-border_color cursor-pointer"}
-            `}
+                onKeyDown={handleKeyDown}
+                className={`w-5 h-5 flex items-center justify-center border rounded
+                    select-none transition-colors duration-150 ease-in-out
+                    focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-secondary
+                    ${checked
+                        ? 'bg-secondary border-secondary'
+                        : `bg-white border-neutral-300 ${disabled ? "" : "hover:border-primary"}`
+                    }
+                    ${disabled ? "border-neutral-200 bg-neutral-100" : ""}
+                `}
                 draggable={false}
             >
-                {
-                    checked ?
-                        <img
-                            src={tick}
-                        />
-                        :
-                        showCross ? <img src={cross} /> : ''
-                }
+                {checked && <img src={tick} alt="Checked" className="w-4 h-4" />} {/* Assuming tick is white or light */}
+                {!checked && showCross && <img src={cross} alt="Not checked" className="w-4 h-4 text-neutral-300" />} {/* May need to style SVG fill if it's not inheriting */}
             </div>
+            {label && (
+                <p className={`font-sans text-base ${disabled ? "text-neutral-300" : "text-neutral-400"} select-none`}>
+                    {label}
+                </p>
+            )}
         </div>
     );
 };
 
 export default Checkbox;
+/* Default size prop changed, removed unused size styling for label.
+   Moved click handler to the main div for better UX (clicking label also toggles).
+   Added ARIA roles and states.
+   Standardized checkbox size and removed internal padding from the div, relying on SVG size.
+   Simplified hover effects.
+   Adjusted disabled styling.
+*/

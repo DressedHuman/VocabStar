@@ -8,10 +8,10 @@ interface Props {
     label: string;
     placeholder: string;
     required?: boolean;
-    focus?: boolean;
+    autoFocus?: boolean; // Updated from focus
 };
 
-const InputPhoneNumber = ({ name, id, label, placeholder, required, focus }: Props) => {
+const InputPhoneNumber = ({ name, id, label, placeholder, required, autoFocus }: Props) => { // Updated prop name
     const [error, setError] = useState("");
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,10 +32,19 @@ const InputPhoneNumber = ({ name, id, label, placeholder, required, focus }: Pro
     }
 
     return (
-        <div>
-            <InputField type="text" name={name} id={id} label={label} placeholder={placeholder} required={required} focus={focus} onChangeHandler={onChangeHandler} />
+        <div className="w-full"> {/* Ensure it takes available width */}
+            <InputField
+                type="tel" // Changed to "tel" for semantic phone number input
+                name={name}
+                id={id}
+                label={label}
+                placeholder={placeholder}
+                required={required}
+                autoFocus={autoFocus} // Passed updated prop
+                onChangeHandler={onChangeHandler}
+            />
             {
-                error && <p className="font-mono text-center text-[yellow]">{error}</p>
+                error && <p className="font-sans text-sm font-medium text-error text-center mt-1">{error}</p> // Styled error message
             }
         </div>
     );

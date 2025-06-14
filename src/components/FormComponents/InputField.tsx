@@ -6,31 +6,52 @@ interface Props {
     name: string;
     id?: string;
     placeholder?: string;
-    lang?: "en" | "bn";
     required?: boolean;
-    focus?: boolean;
-    rowCol?: "row" | "col";
-    gapBetweenLabelField?: string;
+    autoFocus?: boolean; // Renamed from focus to autoFocus for clarity
+    layout?: "col" | "row"; // Simplified layout prop
     onChangeHandler?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    value?: string | number;
+    disabled?: boolean;
 };
 
-const InputField = ({ type = "text", label, name, id, placeholder, lang = "en", required = false, focus = false, rowCol="col", gapBetweenLabelField="gap-1", onChangeHandler }: Props) => {
+const InputField = ({
+    type = "text",
+    label,
+    name,
+    id,
+    placeholder,
+    required = false,
+    autoFocus = false,
+    layout = "col",
+    onChangeHandler,
+    value,
+    disabled = false
+}: Props) => {
+    const inputId = id || name;
 
     return (
-        <div className={`w-min flex ${rowCol==="row" ? "flex-col md:flex-row" : "flex-col"} justify-center items-center ${gapBetweenLabelField}`}>
-            <h3 className="text-lg text-font_color font-medium text-nowrap">{label}</h3>
-            {
-                rowCol==="row" && <p className="hidden md:block text-lg text-app_name font-bold">:</p>
-            }
+        <div className={`w-full flex ${layout === "row" ? "md:flex-row md:items-center md:gap-2" : "flex-col gap-1"}`}>
+            <label
+                htmlFor={inputId}
+                className="font-sans text-sm font-medium text-primary"
+            >
+                {label}
+                {required && <span className="text-error ml-1">*</span>}
+            </label>
             <input
-                className={`w-[275px] border-2 border-[#B1D4E0] focus:border-[#2E8BC0] outline-none px-2 py-1 rounded-md ${lang === "en" ? "font-open-sans placeholder:font-open-sans" : lang === "bn" ? "font-hind_siliguri placeholder:font-hind_siliguri" : ""}`}
                 type={type}
                 name={name}
-                id={id}
+                id={inputId}
                 placeholder={placeholder}
                 required={required}
-                autoFocus={focus}
+                autoFocus={autoFocus}
                 onChange={onChangeHandler}
+                value={value}
+                disabled={disabled}
+                className={`w-full font-sans border border-neutral-300 px-3 py-2 rounded-md
+                            focus:border-primary focus:ring-1 focus:ring-primary outline-none
+                            placeholder:text-neutral-300 transition-colors duration-150 ease-in-out
+                            ${disabled ? "bg-neutral-100 cursor-not-allowed" : "bg-white"}`}
             />
         </div>
     );

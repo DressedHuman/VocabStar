@@ -60,21 +60,37 @@ const AddVocab = () => {
             <form
                 id="add_vocab_form"
                 onSubmit={addVocabHandler}
-                className="flex flex-col justify-center items-center gap-5"
+                className="flex flex-col items-stretch gap-5" // Changed to items-stretch
             >
-                <div className="flex flex-col lg:flex-row justify-center items-center gap-2 md:gap-4">
+                <div className="flex flex-col lg:flex-row items-start gap-4"> {/* items-start for better alignment with labels, adjusted gap */}
                     {/* Original English Word Field */}
-                    <InputField label="Word" name="from_word" id="from_word" placeholder="type english word" required focus />
+                    <InputField
+                        label="Word"
+                        name="from_word"
+                        id="from_word"
+                        placeholder="e.g., benevolent"
+                        required
+                        autoFocus // Changed from focus
+                        additional_classes="w-full lg:w-1/2" // Take full width on small, half on large
+                    />
 
                     {/* Meaning Field */}
-                    <InputField label="Meaning(s)" name="meaning" placeholder="(,) দিয়ে একাধিক অর্থ লিখুন" lang="bn" required />
+                    <InputField
+                        label="Meaning(s)"
+                        name="meaning"
+                        placeholder="Enter meanings, separated by commas" // Updated placeholder
+                        required
+                        additional_classes="w-full lg:w-1/2" // Take full width on small, half on large
+                        // lang="bn" prop removed as InputField no longer uses it
+                    />
                 </div>
 
                 {/* Submission Error */}
                 {(vocab_type==="add" && addVocabError) && <FormError errorText={addVocabError} />}
 
                 {/* Submit Button */}
-                <Button label="Save" button_type="submit" />
+                <Button label="Save Word" button_type="submit" variant="primary" additional_classes="w-full md:w-auto md:self-end" />
+                {/* md:w-auto and md:self-end to make it not full width on larger screens and align to right */}
             </form>
         </CardStructure>
     );

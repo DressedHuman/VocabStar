@@ -20,11 +20,12 @@ export interface ToFromLangs {
 
 interface Props {
     configHandler: (config: TestConfigType) => void;
-    focus?: boolean;
+    autoFocus?: boolean; // Renamed from focus
 };
 
 
 const initialLangsValue: ToFromLangs = {
+    // Defaulting to English -> Bengali, can be changed by user
     from: {
         id: "e",
         name: "English",
@@ -35,7 +36,7 @@ const initialLangsValue: ToFromLangs = {
     },
 };
 
-const TakeTestConfigForm = ({ configHandler, focus }: Props) => {
+const TakeTestConfigForm = ({ configHandler, autoFocus }: Props) => { // Renamed prop
     const [toFromLangs, setToFromLangs] = useState<ToFromLangs>(initialLangsValue);
     const [fromRecentOnly, setFromRecentOnly] = useState<boolean>(false);
 
@@ -80,29 +81,45 @@ const TakeTestConfigForm = ({ configHandler, focus }: Props) => {
     }
 
     return (
-        <CardStructure>
-            {/* Card Title */}
+        // Centered card for the configuration form
+        <CardStructure additional_classes="max-w-lg mx-auto">
             <ConfigFormHeader fromLang={toFromLangs.from} toLang={toFromLangs.to} swapper={setToFromLangs} />
 
-            {/* Take Test Form */}
             <form
                 onSubmit={onSubmitHandler}
-                className="flex flex-col justify-center items-center gap-5"
+                className="flex flex-col items-stretch gap-6" // items-stretch for full width, increased gap
             >
-                <div className="flex flex-col justify-center items-center gap-2 md:gap-4">
-                    {/* Word Count Field */}
-                    <InputField type="number" label="Word Count" name="word_count" id="word_count" rowCol="row" placeholder="word count" required onChangeHandler={wordCountValueChangeHandler} focus={focus} />
-
-                    {/* Duration Field */}
-                    <InputField type="number" label="Duration (min)" name="duration" id="duration" rowCol="row"
-                        placeholder="duration in minute(s)" required onChangeHandler={durationValueChangeHandler} />
-
-                    {/* From Today Checkbox */}
-                    <Checkbox label="from recent only" defaultChecked={false} showCross={false} size="small" onChange={() => setFromRecentOnly(!fromRecentOnly)} />
+                {/* Input fields arranged vertically */}
+                <InputField
+                    type="number"
+                    label="Number of Words" // Clearer label
+                    name="word_count"
+                    id="word_count"
+                    layout="row" // Use new layout prop
+                    placeholder="e.g., 10"
+                    required
+                    onChangeHandler={wordCountValueChangeHandler}
+                    autoFocus={autoFocus} // Use renamed prop
+                />
+                <InputField
+                    type="number"
+                    label="Duration (minutes)" // Clearer label
+                    name="duration"
+                    id="duration"
+                    layout="row"
+                    placeholder="e.g., 5"
+                    required
+                    onChangeHandler={durationValueChangeHandler}
+                />
+                <div className="flex justify-center"> {/* Centering checkbox */}
+                  <Checkbox
+                      label="Test from recent words only" // Clearer label
+                      defaultChecked={false}
+                      showCross={false} // Cross not needed for this type of checkbox
+                      onChange={() => setFromRecentOnly(!fromRecentOnly)}
+                  />
                 </div>
-
-                {/* Submit Button */}
-                <Button label="Take Test" />
+                <Button label="Start Test" variant="primary" type="submit" additional_classes="w-full mt-2" />
             </form>
         </CardStructure>
     );

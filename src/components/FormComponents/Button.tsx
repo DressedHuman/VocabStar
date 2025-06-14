@@ -1,23 +1,41 @@
 interface Props {
     label: string;
     button_type?: "submit" | "reset" | "button" | undefined;
-    font_color?: string;
+    variant?: "primary" | "secondary"; // Added variant prop
     additional_classes?: string;
     onClickHandler?: () => void;
+    disabled?: boolean; // Added disabled prop
 }
 
-const Button = ({ label, button_type, font_color="text-font_color", additional_classes, onClickHandler }: Props) => {
+const Button = ({
+    label,
+    button_type = "button",
+    variant = "primary",
+    additional_classes,
+    onClickHandler,
+    disabled = false
+}: Props) => {
+
+    const baseStyles = "py-2 px-4 font-sans font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-150 ease-in-out";
+
+    let variantStyles = "";
+    switch (variant) {
+        case "primary":
+            variantStyles = `bg-primary text-neutral-100 hover:bg-secondary focus:ring-secondary ${disabled ? "opacity-50 cursor-not-allowed" : ""}`;
+            break;
+        case "secondary":
+            variantStyles = `bg-neutral-200 text-primary border border-primary hover:bg-neutral-300 hover:border-secondary focus:ring-secondary ${disabled ? "opacity-50 cursor-not-allowed" : ""}`;
+            break;
+    }
+
     return (
         <button
             type={button_type}
-            className={`min-w-36 border-2 border-border_color px-3 py-1 ${font_color} hover:text-white hover:bg-[#0a263d] lg:hover:bg-transparent bg-transparent text-lg font-medium rounded-md relative overflow-hidden group ${additional_classes}`}
+            className={`${baseStyles} ${variantStyles} ${additional_classes}`}
             onClick={onClickHandler}
+            disabled={disabled}
         >
             {label}
-
-            {/* background animation on mouse over */}
-            <span className="absolute hidden lg:block -top-16 -left-10 -z-10 w-0 h-0 group-hover:w-40 group-hover:h-40 duration-300 rounded-[50%] bg-[#0a263d]"></span>
-            <span className="absolute hidden lg:block -top-16 -left-10 -z-20 w-0 h-0 group-hover:w-72 group-hover:h-72 duration-300 rounded-[50%] bg-bg_color"></span>
         </button>
     );
 };
